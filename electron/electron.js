@@ -10,6 +10,7 @@ function createWindow() {
         height:600,
         webPreferences: {
             nodeIntegration: false,
+            nativeWindowOpen: true,
             preload: __dirname + '/preload.js'
         }
     });
