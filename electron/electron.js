@@ -14,11 +14,14 @@ function createWindow() {
             preload: __dirname + '/preload.js'
         }
     });
-    const startURL = isDev ? 'http://localhost:8081' : `file://${path.join(__dirname, '../build/index.html')}`;
+    const startURL = isDev ? 'http://localhost:8081' : `file://${path.join(__dirname, '../client/build/index.html')}`;
  
     mainWindow.loadURL(startURL);
  
-    mainWindow.once('ready-to-show', () => mainWindow.show());
+    mainWindow.once('ready-to-show', () =>  {
+        mainWindow.show();
+        console.log(startURL);
+    });
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
