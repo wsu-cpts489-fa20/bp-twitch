@@ -2,9 +2,10 @@
   "name": "code-ch18-eb",
   "version": "1.0.0",
   "description": "Testing instructions for deployment to EB",
-  "main": "server.compiled.js",
+  "main": "./electron/electron.js",
   "scripts": {
     "start": "node server.compiled.js",
+    "edev" : "concurrently \"node server.compiled.js\" \"electron .\"",
     "build": "babel server.js --out-file server.compiled.js",
     "dev": "nodemon --exec node server.compiled.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,7 +14,11 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
+    "electron": "^10.1.5",
+    "electron-is-dev": "^1.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "mongoose": "^5.10.9",
@@ -21,7 +26,8 @@
     "passport-github": "^1.1.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "regenerator-runtime": "^0.13.7"
+    "regenerator-runtime": "^0.13.7",
+    "wait-on": "^5.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
