@@ -1,6 +1,7 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, webContents } = require('electron');
 const isDev = require('electron-is-dev');   
 const path = require('path');
+require("../server.compiled.js");
  
 let mainWindow;
  
@@ -9,18 +10,17 @@ function createWindow() {
         width:800,
         height:600,
         webPreferences: {
-            nodeIntegration: true,
+            nodeIntegration: false,
             nativeWindowOpen: true,
             preload: __dirname + '/preload.js'
         }
     });
-    const startURL = isDev ? 'http://localhost:8081' : `file://${path.join(__dirname, '../client/build/index.html')}`;
+    const startURL = 'http://localhost:8081';
  
     mainWindow.loadURL(startURL);
  
     mainWindow.once('ready-to-show', () =>  {
         mainWindow.show();
-        console.log(startURL);
     });
     mainWindow.on('closed', () => {
         mainWindow = null;

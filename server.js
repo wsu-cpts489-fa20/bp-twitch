@@ -13,7 +13,7 @@ import express from 'express';
 require('dotenv').config();
 
 const LOCAL_PORT = 8081;
-const DEPLOY_URL = "http://localhost:8081";
+const DEPLOY_URL = process.env.NODE_ENV === "production" ? "" : "http://localhost:8081";
 const PORT = process.env.HTTP_PORT || LOCAL_PORT;
 const GithubStrategy = passportGithub.Strategy;
 const LocalStrategy = passportLocal.Strategy;
@@ -26,7 +26,7 @@ const app = express();
 //////////////////////////////////////////////////////////////////////////
 import mongoose from 'mongoose';
 
-const connectStr = process.env.MONGO_STR;
+const connectStr = "mongodb+srv://dbAdmin:ZBreTCg72R6acylV@ia7-radewyatt.vcp1c.mongodb.net/appdb?retryWrites=true&w=majority";
 mongoose.connect(connectStr, {useNewUrlParser: true, useUnifiedTopology: true})
   .then(
     () =>  {console.log(`Connected to ${connectStr}.`)},
@@ -78,8 +78,8 @@ const User = mongoose.model("User",userSchema);
 //the 'github' strategy in passport.js.
 //////////////////////////////////////////////////////////////////////////
 passport.use(new GithubStrategy({
-    clientID: process.env.GH_CLIENT_ID,
-    clientSecret: process.env.GH_CLIENT_SECRET,
+    clientID: "a075012c4b08543f42a8",
+    clientSecret: "8dde6978090028aee37c72df9ea7ce268678b6d3",
     callbackURL: DEPLOY_URL + "/auth/github/callback"
   },
   //The following function is called after user authenticates with github
@@ -157,6 +157,7 @@ passport.deserializeUser(async (userId, done) => {
 //in the client/ directory at PORT. It also writes an express session
 //to a cookie, and initializes a passport object to support OAuth.
 /////////////////////////////////////////////////////////////////////////
+
 app
   .use(session({secret: "speedgolf", 
                 resave: false,
@@ -187,7 +188,7 @@ app.get('/auth/github', passport.authenticate('github'));
 app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
     console.log("auth/github/callback reached.")
-    res.redirect('/'); //sends user back to login screen; 
+    res.redirect("/"); //sends user back to login screen; 
                        //req.isAuthenticated() indicates status
   }
 );
@@ -463,3 +464,4 @@ app.delete('/rounds/:userId/:roundId', async (req, res, next) => {
   } 
 });
 
+module.exports = app;

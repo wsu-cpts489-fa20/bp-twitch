@@ -37,7 +37,7 @@ handleLoginSubmit = async (event) => {
     event.preventDefault();
     this.setState({loginBtnIcon: "fa fa-spin fa-spinner",
                    loginBtnLabel: "Logging In..."});
-    const url = "auth/login?username=" + this.emailInputRef.current.value +
+    const url = "/auth/login?username=" + this.emailInputRef.current.value +
                 "&password=" + this.passwordInputRef.current.value;
     const res = await fetch(url, {method: 'POST'}); 
     if (res.status == 200) { //successful login!
@@ -79,7 +79,7 @@ cancelResetPassword = () => {
 //handleOAuthLogin -- Callback function that initiates contact with OAuth
 //provider
 handleOAuthLogin = (provider) => {
-    window.open(`/auth/${provider}`,"_self");
+    window.open(`http://localhost:8081/auth/${provider}`,"_self");
 }
 
 //handleOAuthLoginClick -- Called whent the user clicks on button to
@@ -114,7 +114,7 @@ getNewPassword = () => {
 //password. pw contains the new password. Call on the Update (PUT) server
 //route to update the user's password in the database.
 resetPassword = async(pw) => {
-    const url = "/users/" + this.resetUserId;
+    const url = "http://localhost:8081/users/" + this.resetUserId;
     const res = await fetch(url, {
         headers: {
             'Accept': 'application/json',

@@ -5,7 +5,7 @@
   "main": "./electron/electron.js",
   "scripts": {
     "start": "node server.compiled.js",
-    "edev": "concurrently \"node server.compiled.js\" \"electron .\"",
+    "edev": "electron .",
     "build": "babel server.js --out-file server.compiled.js",
     "dev": "nodemon --exec node server.compiled.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -38,5 +38,14 @@
     "electron": "^10.1.5",
     "electron-builder": "^22.9.1",
     "nodemon": "^2.0.5"
+  },
+  "build": {
+    "files": [
+      "client/build/**/*",
+      "client/node_modules/**/*",
+      "electron/**/*",
+      "node_modules/**/*",
+      "server.compiled.js"
+    ]
   }
 }
