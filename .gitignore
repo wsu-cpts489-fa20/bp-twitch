@@ -4,6 +4,7 @@
 client/node_modules
 client/.pnp
 client/.pnp.js
+client/build
 
 # testing
 client/coverage
@@ -20,6 +21,7 @@ client/yarn-debug.log*
 client/yarn-error.log*
 
 #Root directory dependencies
+/dist
 /node_modules
 /.pnp
 .pnp.js

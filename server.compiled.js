@@ -31,7 +31,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 require('dotenv').config();
 
 var LOCAL_PORT = 8081;
-var DEPLOY_URL = "http://localhost:8081";
+var DEPLOY_URL = process.env.NODE_ENV === "production" ? "" : "http://localhost:8081";
 var PORT = process.env.HTTP_PORT || LOCAL_PORT;
 var GithubStrategy = _passportGithub["default"].Strategy;
 var LocalStrategy = _passportLocal["default"].Strategy;
@@ -41,7 +41,7 @@ var app = (0, _express["default"])(); //////////////////////////////////////////
 //using the mongoose library.
 //////////////////////////////////////////////////////////////////////////
 
-var connectStr = process.env.MONGO_STR;
+var connectStr = "mongodb+srv://dbAdmin:ZBreTCg72R6acylV@ia7-radewyatt.vcp1c.mongodb.net/appdb?retryWrites=true&w=majority";
 
 _mongoose["default"].connect(connectStr, {
   useNewUrlParser: true,
@@ -136,8 +136,8 @@ var User = _mongoose["default"].model("User", userSchema); /////////////////////
 
 
 _passport["default"].use(new GithubStrategy({
-  clientID: process.env.GH_CLIENT_ID,
-  clientSecret: process.env.GH_CLIENT_SECRET,
+  clientID: "a075012c4b08543f42a8",
+  clientSecret: "8dde6978090028aee37c72df9ea7ce268678b6d3",
   callbackURL: DEPLOY_URL + "/auth/github/callback"
 },
 /*#__PURE__*/
@@ -348,7 +348,7 @@ app.get('/auth/github/callback', _passport["default"].authenticate('github', {
   failureRedirect: '/'
 }), function (req, res) {
   console.log("auth/github/callback reached.");
-  res.redirect('/'); //sends user back to login screen; 
+  res.redirect("/"); //sends user back to login screen; 
   //req.isAuthenticated() indicates status
 }); //LOGOUT route: Use passport's req.logout() method to log the user out and
 //redirect the user to the main app page. req.isAuthenticated() is toggled to false.
@@ -901,3 +901,4 @@ app["delete"]('/rounds/:userId/:roundId', /*#__PURE__*/function () {
     return _ref11.apply(this, arguments);
   };
 }());
+module.exports = app;

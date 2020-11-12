@@ -56,6 +56,9 @@ class App extends React.Component {
               mode: AppMode.FEED //We're authenticated so can get into the app.
             });
           }
+        })
+        .catch(err => {
+          console.log(err)
         }
       )
     } 
