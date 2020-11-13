@@ -46,7 +46,7 @@ function ChatTile (props) {
     const { user } = props;
     if (!user.color) user.color = "#FFFFFF";
     const classes = useStyles(props);
-    var chatBadges = Object.keys(user.badges)
+    var chatBadges = Object.keys(user.badges || {})
     return (
         <div className={classes.tile}>
             <div className={classes.author}>
