@@ -73,7 +73,7 @@ function ElectronBar() {
   const classes = useStyles();
   return (
     <div className={classes.dragbar}>
-      <div className={classes.title}>TCGod</div>
+      <div className={classes.title}></div>
       <div onClick={closeElectronWindow} className={classes.closeButton}> 
         <CloseTwoToneIcon className={classes.closeIcon} /> 
       </div>
