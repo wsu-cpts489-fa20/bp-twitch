@@ -4,8 +4,7 @@
 //variables used in the server middleware.
 //////////////////////////////////////////////////////////////////////////
 import passport from 'passport';
-import passportGithub from 'passport-github'; 
-import passportLocal from 'passport-local';
+import passportTwitch from 'passport-twitch-new';
 import session from 'express-session';
 import regeneratorRuntime from "regenerator-runtime";
 import path from 'path';
@@ -15,8 +14,7 @@ require('dotenv').config();
 const LOCAL_PORT = 8081;
 const DEPLOY_URL = process.env.NODE_ENV === "production" ? "" : "http://localhost:8081";
 const PORT = process.env.HTTP_PORT || LOCAL_PORT;
-const GithubStrategy = passportGithub.Strategy;
-const LocalStrategy = passportLocal.Strategy;
+const TwitchStrategy = passportTwitch.Strategy;
 const app = express();
 
 //////////////////////////////////////////////////////////////////////////
@@ -63,7 +61,7 @@ const userSchema = new Schema({
   id: String, //unique identifier for user
   password: String,
   displayName: String, //Name to be displayed within app
-  authStrategy: String, //strategy used to authenticate, e.g., github, local
+  authStrategy: String, //strategy used to authenticate, e.g., twitch
   profilePicURL: String, //link to profile image
   securityQuestion: String,
   securityAnswer: {type: String, required: function() 
@@ -75,80 +73,35 @@ const User = mongoose.model("User",userSchema);
 //////////////////////////////////////////////////////////////////////////
 //PASSPORT SET-UP
 //The following code sets up the app with OAuth authentication using
-//the 'github' strategy in passport.js.
+//the 'twitch' strategy in passport.js.
 //////////////////////////////////////////////////////////////////////////
-passport.use(new GithubStrategy({
-    clientID: "a075012c4b08543f42a8",
-    clientSecret: "8dde6978090028aee37c72df9ea7ce268678b6d3",
-    callbackURL: DEPLOY_URL + "/auth/github/callback"
-  },
-  //The following function is called after user authenticates with github
-  async (accessToken, refreshToken, profile, done) => {
-    console.log("User authenticated through GitHub! In passport callback.");
-    //Our convention is to build userId from displayName and provider
-    const userId = `${profile.username}@${profile.provider}`;
-    //See if document with this unique userId exists in database 
-    let currentUser = await User.findOne({id: userId});
-    if (!currentUser) { //Add this user to the database
-        currentUser = await new User({
-        id: userId,
-        displayName: profile.displayName,
-        authStrategy: profile.provider,
-        profilePicURL: profile.photos[0].value,
-        rounds: []
-      }).save();
-  }
-  return done(null,currentUser);
-}));
+passport.use(new TwitchStrategy({
+  clientID: "19fbkc20uggbz1a7bcka2azyr2clsu",
+  clientSecret: "4m1ss0l88dgxw2oxh1mr0bi91hb3o6",
+  callbackURL: DEPLOY_URL + "/auth/twitch/callback",
+  scope: "user_read"
+},
+//The following function is called after user authenticates with twitch
+async (accessToken, refreshToken, profile, done) => {
+  console.log("User authenticated through Twitch! In passport callback.");
+  //Our convention is to build userId from displayName and provider
+  console.log(profile);
 
-passport.use(new LocalStrategy({passReqToCallback: true},
-  //Called when user is attempting to log in with local username and password. 
-  //userId contains the email address entered into the form and password
-  //contains the password entered into the form.
-  async (req, userId, password, done) => {
-    let thisUser;
-    try {
-      thisUser = await User.findOne({id: userId});
-      if (thisUser) {
-        if (thisUser.password === password) {
-          return done(null, thisUser);
-        } else {
-          req.authError = "The password is incorrect. Please try again" + 
-                           " or reset your password.";
-          return done(null, false)
-        }
-      } else { //userId not found in DB
-        req.authError = "There is no account with email " + userId + 
-                        ". Please try again.";
-        return done(null, false);
-      }
-    } catch (err) {
-      return done(err);
-    }
-  }
-));
+  const userId = profile.id;
+  return done(null,userId);
+}));
 
 //Serialize the current user to the session
 passport.serializeUser((user, done) => {
     console.log("In serializeUser.");
     console.log("Contents of user param: " + JSON.stringify(user));
-    done(null,user.id);
+    done(null, user);
 });
   
 //Deserialize the current user from the session
 //to persistent storage.
-passport.deserializeUser(async (userId, done) => {
-  console.log("In deserializeUser.");
-  console.log("Contents of userId param: " + userId);
-  let thisUser;
-  try {
-    thisUser = await User.findOne({id: userId});
-    console.log("User with id " + userId + 
-      " found in DB. User object will be available in server routes as req.user.")
-    done(null,thisUser);
-  } catch (err) {
-    done(err);
-  }
+passport.deserializeUser(function(user, done) {
+  done(null, user);
 });
 
 //////////////////////////////////////////////////////////////////////////
@@ -159,7 +112,7 @@ passport.deserializeUser(async (userId, done) => {
 /////////////////////////////////////////////////////////////////////////
 
 app
-  .use(session({secret: "speedgolf", 
+  .use(session({secret: "tcgod", 
                 resave: false,
                 saveUninitialized: false,
                 cookie: {maxAge: 1000 * 60}}))
@@ -177,17 +130,17 @@ app
 //AUTHENTICATION ROUTES
 /////////////////////////
 
-//AUTHENTICATE route: Uses passport to authenticate with GitHub.
-//Should be accessed when user clicks on 'Login with GitHub' button on 
+//AUTHENTICATE route: Uses passport to authenticate with Twitch.
+//Should be accessed when user clicks on 'Login with Twitch' button on 
 //Log In page.
-app.get('/auth/github', passport.authenticate('github'));
+app.get('/auth/twitch', passport.authenticate('twitch'));
 
-//CALLBACK route:  GitHub will call this route after the
+//CALLBACK route:  Twitch will call this route after the
 //OAuth authentication process is complete.
 //req.isAuthenticated() tells us whether authentication was successful.
-app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/' }),
+app.get('/auth/twitch/callback', passport.authenticate('twitch', { failureRedirect: '/' }),
   (req, res) => {
-    console.log("auth/github/callback reached.")
+    console.log("auth/twitch/callback reached.")
     res.redirect("/"); //sends user back to login screen; 
                        //req.isAuthenticated() indicates status
   }
