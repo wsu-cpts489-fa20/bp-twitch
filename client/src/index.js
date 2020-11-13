@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-social/bootstrap-social.css';
-import 'font-awesome/css/font-awesome.min.css';
-import './styles/index.css';
-import App from './components/App.js';
+import './index.css';
+import TwitchChatClient from "./views/TwitchChatClient";
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <React.StrictMode>
+    <TwitchChatClient />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
