@@ -28,6 +28,7 @@ class StreamSelect extends React.Component {
   }
 
   keyPress = (e) => {
+    // if the enter key is pressed change the channel
     if (e.keyCode === 13) {
       const { changeChannel } = this.props;
       const { channel } = this.state;
