@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/styles';
 import ChatStream from "../components/ChatStream";
 import StreamSelect from "../components/StreamSelect";
 import ElectronBar from "../components/ElectronBar";
+import LoginPage from "../components/LoginPage";
 
 const styles = {
     appcontainer: {
@@ -19,7 +20,28 @@ class TwitchChatClient extends React.Component {
     constructor() {
         super();
         this.state = {
+            userId: null,
             client: null,
+            isAuthenticated: false
+        }
+    }
+
+    componentDidMount() {
+        if (!this.state.authenticated) {
+            //Use /auth/test route to (re)-test authentication and obtain user data
+            fetch("/auth/test")
+                .then((response) => response.json())
+                .then((obj) => {
+                    if (obj.isAuthenticated) {
+                        const userId = obj.user.id;
+
+                        //Update current user
+                        this.setState({
+                            userId: userId,
+                            isAuthenticated: true
+                        });
+                    }
+                })
         }
     }
 
@@ -32,9 +54,9 @@ class TwitchChatClient extends React.Component {
                 reconnect: true,
                 secure: true
             },
-            channels: [ newChannel ]
+            channels: [newChannel]
         });
-        this.setState({client: newClient});
+        this.setState({ client: newClient });
     }
 
     render() {
@@ -43,8 +65,11 @@ class TwitchChatClient extends React.Component {
         return (
             <div className={classes.appcontainer}>
                 <ElectronBar />
-                <StreamSelect changeChannel={this.changeChannel}/>
-                <ChatStream client={client}/>
+                { this.state.isAuthenticated ? <>
+                    <StreamSelect changeChannel={this.changeChannel} />
+                    <ChatStream client={client} /></>
+                    : <LoginPage />
+                }
             </div>
         );
     }
