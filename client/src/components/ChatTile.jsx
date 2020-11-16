@@ -63,6 +63,7 @@ function ChatTile (props) {
 export default ChatTile;
 
 // provided by twitch
+// https://badges.twitch.tv/v1/badges/global/display
 const badges = {
   "badge_sets": {
     "1979-revolution_1": {
