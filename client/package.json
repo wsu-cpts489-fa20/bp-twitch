@@ -1,9 +1,12 @@
 {
-  "name": "speedgolf-react",
+  "name": "TCGod",
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.10.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
@@ -11,10 +14,13 @@
     "bootstrap-social": "^5.1.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.4.1",
+    "material-ui": "^0.20.2",
     "popper.js": "^1.16.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.3.1"
+    "react-scripts": "3.3.1",
+    "react-uuid": "^1.0.2",
+    "tmi.js": "^1.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -36,5 +42,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@iconify-icons/mdi": "^1.0.20",
+    "@iconify/react": "^1.1.3"
   }
 }

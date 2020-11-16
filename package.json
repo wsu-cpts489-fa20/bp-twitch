@@ -1,7 +1,7 @@
 {
-  "name": "code-ch18-eb",
+  "name": "TCGod",
   "version": "1.0.0",
-  "description": "Testing instructions for deployment to EB",
+  "description": "Twitch Chat God",
   "main": "./electron/electron.js",
   "scripts": {
     "start": "node server.compiled.js",
@@ -24,8 +24,8 @@
     "express-session": "^1.17.1",
     "mongoose": "^5.10.9",
     "passport": "^0.4.1",
-    "passport-github": "^1.1.0",
     "passport-local": "^1.0.0",
+    "passport-twitch-new": "0.0.2",
     "path": "^0.12.7",
     "regenerator-runtime": "^0.13.7",
     "wait-on": "^5.2.0"

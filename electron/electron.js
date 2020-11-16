@@ -7,8 +7,10 @@ let mainWindow;
  
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width:800,
+        width:500,
         height:600,
+        show: false,
+        frame: false,
         webPreferences: {
             nodeIntegration: false,
             nativeWindowOpen: true,
@@ -19,9 +21,8 @@ function createWindow() {
  
     mainWindow.loadURL(startURL);
  
-    mainWindow.once('ready-to-show', () =>  {
-        mainWindow.show();
-    });
+    mainWindow.once('ready-to-show', () => mainWindow.show());
+    
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
