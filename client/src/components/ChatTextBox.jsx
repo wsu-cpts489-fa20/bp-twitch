@@ -35,7 +35,8 @@ class ChatTextBox extends React.Component {
     keyPress = (e) => {
         // if the enter key is pressed change the channel
         if (e.keyCode === 13) {
-            console.log("Sending chat")
+            this.props.client.say(this.props.channel, this.state.chatBoxText);
+            this.setState({chatBoxText: ""})
         }
     }
 
@@ -44,7 +45,7 @@ class ChatTextBox extends React.Component {
         return (
             <Input
                 className={classes.mainInput}
-                defaultValue={this.state.chatBoxText}
+                value={this.state.chatBoxText}
                 onChange={this.handleChange}
                 onKeyDown={this.keyPress}
                 placeholder="Enter text to chat"

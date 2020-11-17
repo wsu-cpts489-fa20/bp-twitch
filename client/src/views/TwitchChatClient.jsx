@@ -18,67 +18,85 @@ const styles = {
 };
 
 class TwitchChatClient extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      userObj: null,
-      client: null,
-      isAuthenticated: false,
-      isAnonymous: false,
-    };
-  }
-
-  componentDidMount() {
-    const { isAuthenticated } = this.state;
-    if (!isAuthenticated) {
-      fetch("/auth/test")
-        .then((response) => response.json())
-        .then((obj) => {
-          if (obj.isAuthenticated) {
-            this.setState({
-              userObj: obj.user,
-              isAuthenticated: true,
-            });
-          }
-        });
+    constructor() {
+        super();
+        this.state = {
+            userObj: null,
+            client: null,
+            channel: null,
+            isAuthenticated: false,
+            isAnonymous: false,
+        };
     }
-  }
 
-  setAnonMode = () => {
-    this.setState({isAnonymous: true});
-  }
+    componentDidMount() {
+        const { isAuthenticated } = this.state;
+        if (!isAuthenticated) {
+            fetch("/auth/test")
+                .then((response) => response.json())
+                .then((obj) => {
+                    if (obj.isAuthenticated) {
+                        this.setState({
+                            userObj: obj.user,
+                            isAuthenticated: true,
+                        });
+                    }
+                });
+        }
+    }
 
-  changeChannel = (newChannel) => {
-    const { client } = this.state;
-    if (client) client.disconnect();
-    const newClient = new TMI.Client({
-      connection: {
-        reconnect: true,
-        secure: true,
-      },
-      channels: [newChannel],
-    });
-    this.setState({ client: newClient });
-  };
+    setAnonMode = () => {
+        this.setState({ isAnonymous: true });
+    }
 
-  render() {
-    const { client, isAuthenticated, isAnonymous } = this.state;
-    const { classes } = this.props;
-    return (
-      <div className={classes.appcontainer}>
-        <ElectronBar />
-        {!isAuthenticated && !isAnonymous ? (
-          <LoginPage setAnonMode={this.setAnonMode} />
-        ) : (
-          <>
-            <StreamSelect changeChannel={this.changeChannel} />
-            <ChatStream client={client} />
-            <ChatTextBox userObj={this.state.userObj} />
-          </>
-        )}
-      </div>
-    );
-  }
+    changeChannel = (newChannel) => {
+        this.setState({ channel: newChannel })
+        const { client } = this.state;
+        if (client) client.disconnect();
+        var newClient;
+        if (this.state.isAnonymous) {
+            newClient = new TMI.Client({
+                connection: {
+                    reconnect: true,
+                    secure: true,
+                },
+                channels: [newChannel],
+            });
+        } else {
+            var password = 'oauth:' + this.state.userObj.token;
+            newClient = new TMI.Client({
+                connection: {
+                    reconnect: true,
+                    secure: true,
+                },
+                identity: {
+                    username: this.state.userObj.login,
+                    "password": password
+                },
+                channels: [newChannel],
+            });
+        }
+        this.setState({ client: newClient });
+    };
+
+    render() {
+        const { client, isAuthenticated, isAnonymous } = this.state;
+        const { classes } = this.props;
+        return (
+            <div className={classes.appcontainer}>
+                <ElectronBar />
+                {!isAuthenticated && !isAnonymous ? (
+                    <LoginPage setAnonMode={this.setAnonMode} />
+                ) : (
+                        <>
+                            <StreamSelect changeChannel={this.changeChannel} />
+                            <ChatStream client={client} />
+                            { this.state.isAuthenticated && this.state.client != null ? <ChatTextBox channel={ this.state.channel } client={this.state.client} userObj={this.state.userObj} /> : null}
+                        </>
+                    )}
+            </div>
+        );
+    }
 }
 
 export default withStyles(styles)(TwitchChatClient);
