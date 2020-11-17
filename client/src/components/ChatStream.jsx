@@ -24,7 +24,7 @@ class ChatStream extends React.Component {
 
     componentDidUpdate(prevProps) {
         const { client } = this.props;
-        console.log(client);
+        // console.log(client);
         if (!prevProps.client || client.channels[0] !== prevProps.client.channels[0]) {
             this.updateTwitchClient();
             this.setState({chats: []});

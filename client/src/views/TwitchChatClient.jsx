@@ -5,6 +5,7 @@ import ChatStream from "../components/ChatStream";
 import StreamSelect from "../components/StreamSelect";
 import ElectronBar from "../components/ElectronBar";
 import LoginPage from "../components/LoginPage";
+import ChatTextBox from "../components/ChatTextBox"
 
 const styles = {
   appcontainer: {
@@ -72,6 +73,7 @@ class TwitchChatClient extends React.Component {
           <>
             <StreamSelect changeChannel={this.changeChannel} />
             <ChatStream client={client} />
+            <ChatTextBox userObj={this.state.userObj} />
           </>
         )}
       </div>
