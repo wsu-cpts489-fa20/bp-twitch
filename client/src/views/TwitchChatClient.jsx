@@ -6,6 +6,12 @@ import StreamSelect from "../components/StreamSelect";
 import ElectronBar from "../components/ElectronBar";
 import LoginPage from "../components/LoginPage";
 import ChatTextBox from "../components/ChatTextBox"
+// get your token by inspecting the websocket traffic or by expanding the object that is automatically printed to the console when enter is pressed in the channel search box
+// all the online oauth token generators don't request permission to chat so they don't work
+const localUserObj = {
+    login: 'your_login_name',
+    token: 'oauth:your_oauth_token'
+}
 
 const styles = {
   appcontainer: {
@@ -49,6 +55,11 @@ class TwitchChatClient extends React.Component {
         this.setState({ isAnonymous: true });
     }
 
+    setTestMode = () => {
+        localUserObj.token = localUserObj.token.split(":")[1]
+        this.setState({ userObj: localUserObj, isAuthenticated: true });
+    }
+
     changeChannel = (newChannel) => {
         this.setState({ channel: newChannel })
         const { client } = this.state;
@@ -86,7 +97,7 @@ class TwitchChatClient extends React.Component {
             <div className={classes.appcontainer}>
                 <ElectronBar />
                 {!isAuthenticated && !isAnonymous ? (
-                    <LoginPage setAnonMode={this.setAnonMode} />
+                    <LoginPage setTestMode={this.setTestMode} setAnonMode={this.setAnonMode} />
                 ) : (
                         <>
                             <StreamSelect changeChannel={this.changeChannel} />
