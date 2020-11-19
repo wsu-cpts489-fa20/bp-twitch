@@ -16,6 +16,7 @@ const DEPLOY_URL = process.env.NODE_ENV === "production" ? "" : "http://localhos
 const PORT = process.env.HTTP_PORT || LOCAL_PORT;
 const TwitchStrategy = passportTwitch.Strategy;
 const app = express();
+var token = ""
 
 //////////////////////////////////////////////////////////////////////////
 //MONGOOSE SET-UP
@@ -79,12 +80,13 @@ passport.use(new TwitchStrategy({
   clientID: "19fbkc20uggbz1a7bcka2azyr2clsu",
   clientSecret: "4m1ss0l88dgxw2oxh1mr0bi91hb3o6",
   callbackURL: DEPLOY_URL + "/auth/twitch/callback",
-  scope: "user_read"
+  scope: ["user_read", "chat:edit", "chat:read"]
 },
 //The following function is called after user authenticates with twitch
 async (accessToken, refreshToken, profile, done) => {
-  console.log("User authenticated through Twitch! In passport callback.");
-  return done(null, profile);
+    token = accessToken
+    console.log("User authenticated through Twitch! In passport callback.");
+    return done(null, profile);
 }));
 
 //Serialize the current user to the session
@@ -96,8 +98,8 @@ passport.serializeUser((user, done) => {
   
 //Deserialize the current user from the session
 //to persistent storage.
-passport.deserializeUser(function(user, done) {
-  done(null, user);
+passport.deserializeUser(function (user, done) {
+    done(null, user);
 });
 
 //////////////////////////////////////////////////////////////////////////
@@ -158,6 +160,7 @@ app.get('/auth/test', (req, res) => {
     if (isAuth) {
         console.log("User is authenticated");
         console.log("User record tied to session: " + JSON.stringify(req.user));
+        req.user.token = token
     } else {
         //User is not authenticated
         console.log("User is not authenticated");

@@ -42,6 +42,7 @@ function LoginPage(props) {
         className={[classes.button, classes.twitchButton].join(" ")}
         onClick={handleTwitchOauthLogin}
         startIcon={<Icon icon={twitchIcon} />}
+        id="twitchLoginBtn"
       >
         Login with Twitch
       </Button>
@@ -52,6 +53,15 @@ function LoginPage(props) {
         onClick={props.setAnonMode}
       >
         Continue as Anonymous User
+      </Button>
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.button}
+        onClick={props.setTestMode}
+        id="testLoginButton"
+      >
+      Continue in test mode
       </Button>
     </div>
   );
