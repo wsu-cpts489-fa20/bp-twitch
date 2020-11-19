@@ -5,10 +5,10 @@
   "main": "./electron/electron.js",
   "scripts": {
     "start": "node server.compiled.js",
-    "edev": "electron .",
+    "edev": "electron . R2den oauth:8qdnik2jborbe9fnle9sqx8aoymgxz",
     "build": "babel server.js --out-file server.compiled.js",
     "dev": "nodemon --exec node server.compiled.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "testcafe \"electron:\" \"./test/tests.js\"",
     "ebuild": "npm run build && electron-builder build",
     "postinstall": "electron-builder install-app-deps"
   },
@@ -28,6 +28,7 @@
     "passport-twitch-new": "0.0.2",
     "path": "^0.12.7",
     "regenerator-runtime": "^0.13.7",
+    "testcafe-browser-provider-electron": "^0.0.15",
     "wait-on": "^5.2.0"
   },
   "devDependencies": {

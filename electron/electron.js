@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, webContents } = require('electron');
+const { app, BrowserWindow, ipcMain, webContents, remote } = require('electron');
 const isDev = require('electron-is-dev');   
 const path = require('path');
 require("../server.compiled.js");
@@ -12,12 +12,15 @@ function createWindow() {
         show: false,
         frame: false,
         webPreferences: {
-            nodeIntegration: false,
+            nodeIntegration: true,
             nativeWindowOpen: true,
-            preload: __dirname + '/preload.js'
+            enableRemoteModule: true,
+            preload: __dirname + '/preload.js',
         }
     });
     const startURL = 'http://localhost:8081';
+
+    global.commandLineArgs = {username: process.argv[2], token: process.argv[3]};
  
     mainWindow.loadURL(startURL);
  

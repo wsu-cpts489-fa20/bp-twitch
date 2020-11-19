@@ -6,11 +6,11 @@ import StreamSelect from "../components/StreamSelect";
 import ElectronBar from "../components/ElectronBar";
 import LoginPage from "../components/LoginPage";
 import ChatTextBox from "../components/ChatTextBox"
-// get your token by inspecting the websocket traffic or by expanding the object that is automatically printed to the console when enter is pressed in the channel search box
-// all the online oauth token generators don't request permission to chat so they don't work
+const { remote } = window.require('electron');
+
 const localUserObj = {
-    login: 'your_login_name',
-    token: 'oauth:your_oauth_token'
+    login: "",
+    token: ""
 }
 
 const styles = {
@@ -36,6 +36,7 @@ class TwitchChatClient extends React.Component {
     }
 
     componentDidMount() {
+        console.log(remote.getGlobal('commandLineArgs'));
         const { isAuthenticated } = this.state;
         if (!isAuthenticated) {
             fetch("/auth/test")
@@ -102,7 +103,7 @@ class TwitchChatClient extends React.Component {
                         <>
                             <StreamSelect changeChannel={this.changeChannel} />
                             <ChatStream client={client} />
-                            { this.state.isAuthenticated && this.state.client != null ? <ChatTextBox channel={ this.state.channel } client={this.state.client} userObj={this.state.userObj} /> : null}
+                            { this.state.client != null ? <ChatTextBox channel={ this.state.channel } client={this.state.client} userObj={this.state.userObj} /> : null}
                         </>
                     )}
             </div>
