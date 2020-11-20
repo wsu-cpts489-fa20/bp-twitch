@@ -1,7 +1,8 @@
 import React from 'react';
 import { withStyles } from '@material-ui/styles';
-import uuid from 'react-uuid'
+import uuid from 'react-uuid';
 import ChatTile from "./ChatTile";
+import UserDetail from "./UserDetail";
 
 const styles = {
     streamContainer: {
@@ -17,14 +18,15 @@ class ChatStream extends React.Component {
         super();
         this.state = {
             chats: [],
-            channel: null
+            channel: null,
+            user: null
         }
         this.messagesEndRef = React.createRef();
+        this.setDetailUser = this.setDetailUser.bind(this);
     }
 
     componentDidUpdate(prevProps) {
         const { client } = this.props;
-        console.log(client);
         if (!prevProps.client || client.channels[0] !== prevProps.client.channels[0]) {
             this.updateTwitchClient();
             this.setState({chats: []});
@@ -47,16 +49,33 @@ class ChatStream extends React.Component {
         this.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
 
+    setDetailUser = (newUser) => {
+        this.setState({"user": newUser});
+    }
+
+    renderUserDetail = () => {
+        if(this.state.user === null) {
+            return;
+        }
+        else {
+            return (
+                <UserDetail closeModal={() => this.setDetailUser(null)} user={this.state.user} />
+            );
+        }
+    }
+
     render() {
         const { classes } = this.props;
-        const items = this.state.chats.map(function(item){
-            return <ChatTile key={uuid()} user={item[0]} message={item[1]}/>;
-        });
+        const items = this.state.chats.map(function(item) {
+            return <ChatTile key={uuid()} setUser={this.setDetailUser} user={item[0]} message={item[1]}/>;
+        }, this);
         return (
-            <div className={classes.streamContainer}>
+            <div className={classes.streamContainer} ref={this.containerRef} >
+                { this.renderUserDetail() }
                 {items}
                 <div ref={this.messagesEndRef} />
             </div>
+
         )
     }
 }
