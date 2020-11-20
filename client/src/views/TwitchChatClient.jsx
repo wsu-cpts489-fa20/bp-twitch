@@ -8,9 +8,10 @@ import LoginPage from "../components/LoginPage";
 import ChatTextBox from "../components/ChatTextBox"
 const { remote } = window.require('electron');
 
+const { username, token } = remote.getGlobal('commandLineArgs');
 const localUserObj = {
-    login: "",
-    token: ""
+    login: username,
+    token: token,
 }
 
 const styles = {
@@ -36,7 +37,7 @@ class TwitchChatClient extends React.Component {
     }
 
     componentDidMount() {
-        console.log(remote.getGlobal('commandLineArgs'));
+        console.log(localUserObj);
         const { isAuthenticated } = this.state;
         if (!isAuthenticated) {
             fetch("/auth/test")
@@ -91,21 +92,27 @@ class TwitchChatClient extends React.Component {
         this.setState({ client: newClient });
     };
 
+    getAppBody = () => {
+        const { client, channel, userObj, isAuthenticated, isAnonymous } = this.state;
+        if (!isAuthenticated && !isAnonymous) {
+            return <LoginPage setTestMode={this.setTestMode} setAnonMode={this.setAnonMode} />
+        } else {
+            return (
+                <>
+                    <StreamSelect changeChannel={this.changeChannel} />
+                    <ChatStream client={client} />
+                    <ChatTextBox channel={channel} isAnon={isAnonymous} client={client} userObj={userObj} />
+                </>
+            )
+        }
+    }
+
     render() {
-        const { client, isAuthenticated, isAnonymous } = this.state;
         const { classes } = this.props;
         return (
             <div className={classes.appcontainer}>
                 <ElectronBar />
-                {!isAuthenticated && !isAnonymous ? (
-                    <LoginPage setTestMode={this.setTestMode} setAnonMode={this.setAnonMode} />
-                ) : (
-                        <>
-                            <StreamSelect changeChannel={this.changeChannel} />
-                            <ChatStream client={client} />
-                            { this.state.client != null ? <ChatTextBox channel={ this.state.channel } client={this.state.client} userObj={this.state.userObj} /> : null}
-                        </>
-                    )}
+                {this.getAppBody()}
             </div>
         );
     }

@@ -17,14 +17,13 @@ const styles = {
 
 class ChatTextBox extends React.Component {
     constructor(props) {
-        super(props);
+        super();
         this.state = {
             chatBoxText: ""
         }
     }
 
     setText = (newText) => {
-        console.log(newText)
         this.setState({"chatBoxText": newText.target.value})
     }  
 
@@ -33,30 +32,36 @@ class ChatTextBox extends React.Component {
     }
 
     keyPress = (e) => {
+        const { client, channel } = this.props;
+        const { chatBoxText } = this.state;
         // if the enter key is pressed change the channel
         if (e.keyCode === 13) {
-            this.props.client.say(this.props.channel, this.state.chatBoxText);
+            client.say(channel, chatBoxText);
             this.setState({chatBoxText: ""})
         }
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, isAnon, client } = this.props;
+        const { chatBoxText } = this.state;
         return (
-            <Input
-                className={classes.mainInput}
-                value={this.state.chatBoxText}
-                onChange={this.handleChange}
-                onKeyDown={this.keyPress}
-                placeholder="Enter text to chat"
-                color="secondary"
-                inputProps={{ 
-                    className: classes.innerInput,
-                }}
-                spellCheck={false}
-                id="chatTextBox"
-                fullWidth
-            />
+            (!isAnon && client ? 
+                <Input
+                    className={classes.mainInput}
+                    value={chatBoxText}
+                    onChange={this.handleChange}
+                    onKeyDown={this.keyPress}
+                    placeholder="Send a message"
+                    color="secondary"
+                    inputProps={{ 
+                        className: classes.innerInput,
+                    }}
+                    spellCheck={false}
+                    id="chatTextBox"
+                    fullWidth
+                />
+                : null
+            )
         )
     }
 }
