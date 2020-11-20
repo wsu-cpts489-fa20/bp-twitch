@@ -1,3 +1,19 @@
+### Milestone 2
+
+#### Code Quality Files
+
+`client/src/views/TwitchChatClient.jsx` , `client/src/components/ChatStream.jsx`
+
+#### Summary of Work Done
+> This sprint we completed the following features: 
+>
+> - Sending chat messages as an authenticated user.
+>
+> - Processing all badges to decorate users in a chat stream.
+>
+> - Integrating testCafe with the electron framework. 
+
+
 # bp-twitch
 
 **bp-twitch** is a desktop Twitch chat client based on the MERN stack architecture.
@@ -7,16 +23,35 @@ It allows users to chat in twitch channel's via the TMI.js api.
 
 ### Root Directory
 
-`npm run edev` : Start server and electron app. Client must have build generated. 
+`npm start`
 
-`npm run build`: Compile server.js into server.compiled.js
+> Start server and electron app. Client must have build generated. 
 
-`npm run ebuild`: Generate production build into `dist/` directory.
+`npm run build`
+
+> Compile server.js into server.compiled.js
+
+`npm run ebuild`
+
+>Generate production build into `dist/` directory.
+
+`npm test` 
+
+> Run this command in the root directory to run tests. Client must have build generated. 
+> In `.testcafe-electron-rc.json`, replace the arguments listed below with your specific twitch
+> account's name and oauth token. The oauth token can be found via the network tab within the 
+> developer tools after connecting to a twitch channel. Remember, oauth tokens expire so if this 
+> command is failing generate a new one. 
+
+
+```
+
+"appArgs": ["electron", ".", "<your-twitch-username>", "oauth:<your-twitch-oauth-token>"]
+
+```
 
 ### Client Directory
 
-`npm run build`: Generate a build of the client. 
+`npm run build`
 
-
-
-
+> Generate a build of the client. 

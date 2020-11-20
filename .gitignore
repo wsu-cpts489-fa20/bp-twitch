@@ -4,7 +4,7 @@
 client/node_modules
 client/.pnp
 client/.pnp.js
-client/build
+/client/build/**
 
 # testing
 client/coverage
@@ -30,6 +30,7 @@ client/yarn-error.log*
 # production
 /build
 # misc
+/server.compiled.js
 .env
 .DS_Store
 .env.local

@@ -45,6 +45,7 @@ class StreamSelect extends React.Component {
         onChange={this.handleChange}
         onKeyDown={this.keyPress}
         placeholder="enter a channel name..."
+        id="streamSelect"
         color="secondary"
         inputProps={{ 
           className: classes.innerInput,
