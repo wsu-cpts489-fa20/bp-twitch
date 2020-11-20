@@ -3,14 +3,7 @@ import { Selector } from 'testcafe'
 fixture `TwitchClient`
     .page `http://localhost:8081`
 
-test('Can Login via Twitch Oauth', async t => {
-    await t.click("#twitchLoginBtn")
-    .typeText("[id*=login-username]", "TCGodTesting")
-    .typeText("[id*=password-input]", ",gLdc_=eG$fKpa6");
-
-    await t.click('[data-a-target=passport-login-button]')
-    .debug();
-
+test('can send a message in chat', async t => {
     await t.typeText("#streamSelect", "r2den")
     .click("#streamSelect")
     .pressKey("enter")

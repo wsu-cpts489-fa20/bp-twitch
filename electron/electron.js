@@ -20,7 +20,7 @@ function createWindow() {
     });
     const startURL = 'http://localhost:8081';
 
-    global.commandLineArgs = {username: process.argv[2], token: process.argv[3]};
+    global.commandLineArgs = {username: process.argv[3], token: process.argv[4]};
  
     mainWindow.loadURL(startURL);
  

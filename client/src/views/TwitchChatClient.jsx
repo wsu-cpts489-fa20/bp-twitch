@@ -8,11 +8,8 @@ import LoginPage from "../components/LoginPage";
 import ChatTextBox from "../components/ChatTextBox"
 const { remote } = window.require('electron');
 
-const { username, token } = remote.getGlobal('commandLineArgs');
-const localUserObj = {
-    login: username,
-    token: token,
-}
+const tcUsr = remote.getGlobal('commandLineArgs').username;
+const tcToken = remote.getGlobal('commandLineArgs').token;
 
 const styles = {
   appcontainer: {
@@ -37,8 +34,12 @@ class TwitchChatClient extends React.Component {
     }
 
     componentDidMount() {
-        console.log(localUserObj);
         const { isAuthenticated } = this.state;
+        // if we are in test mode.
+        if (tcUsr && tcToken) {
+            const testObj = {login: tcUsr, token: tcToken.split(":")[1]}
+            this.setState({userObj: testObj, isAuthenticated: true})
+        } 
         if (!isAuthenticated) {
             fetch("/auth/test")
                 .then((response) => response.json())
@@ -55,11 +56,6 @@ class TwitchChatClient extends React.Component {
 
     setAnonMode = () => {
         this.setState({ isAnonymous: true });
-    }
-
-    setTestMode = () => {
-        localUserObj.token = localUserObj.token.split(":")[1]
-        this.setState({ userObj: localUserObj, isAuthenticated: true });
     }
 
     changeChannel = (newChannel) => {
@@ -84,7 +80,7 @@ class TwitchChatClient extends React.Component {
                 },
                 identity: {
                     username: this.state.userObj.login,
-                    "password": password
+                    password: password
                 },
                 channels: [newChannel],
             });

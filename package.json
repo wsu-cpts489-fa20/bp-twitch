@@ -4,8 +4,7 @@
   "description": "Twitch Chat God",
   "main": "./electron/electron.js",
   "scripts": {
-    "start": "node server.compiled.js",
-    "edev": "electron . R2den oauth:8qdnik2jborbe9fnle9sqx8aoymgxz",
+    "start": "electron .",
     "build": "babel server.js --out-file server.compiled.js",
     "dev": "nodemon --exec node server.compiled.js",
     "test": "testcafe \"electron:\" \"./test/tests.js\"",

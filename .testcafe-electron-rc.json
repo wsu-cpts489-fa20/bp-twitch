@@ -1,5 +1,5 @@
 {
     "mainWindowUrl": "http://localhost:8081",
-    "electronPath": "C:/Users/Raden/Documents/dev/bp-twitch/dist/win-unpacked/TCGod.exe",
-    "appArgs": ["R2den", "oauth:8qdnik2jborbe9fnle9sqx8aoymgxz"]
+    "appPath": "./",
+    "appArgs": ["electron", ".", "R2den", "oauth:zv7i94208av4h2y8dw2g6po2ok6atx"]
 }
