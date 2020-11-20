@@ -12,6 +12,8 @@ var _path = _interopRequireDefault(require("path"));
 
 var _express = _interopRequireDefault(require("express"));
 
+var _nodeFetch = _interopRequireDefault(require("node-fetch"));
+
 var _mongoose = _interopRequireDefault(require("mongoose"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -24,8 +26,11 @@ require('dotenv').config();
 
 var LOCAL_PORT = 8081;
 var DEPLOY_URL = process.env.NODE_ENV === "production" ? "" : "http://localhost:8081";
+var CALLBACK_URL = DEPLOY_URL + "/auth/twitch/callback";
 var PORT = process.env.HTTP_PORT || LOCAL_PORT;
 var TwitchStrategy = _passportTwitchNew["default"].Strategy;
+var CLIENT_ID = "19fbkc20uggbz1a7bcka2azyr2clsu";
+var CLIENT_SECRET = "4m1ss0l88dgxw2oxh1mr0bi91hb3o6";
 var app = (0, _express["default"])();
 var token = ""; //////////////////////////////////////////////////////////////////////////
 //MONGOOSE SET-UP
@@ -128,9 +133,9 @@ var User = _mongoose["default"].model("User", userSchema); /////////////////////
 
 
 _passport["default"].use(new TwitchStrategy({
-  clientID: "19fbkc20uggbz1a7bcka2azyr2clsu",
-  clientSecret: "4m1ss0l88dgxw2oxh1mr0bi91hb3o6",
-  callbackURL: DEPLOY_URL + "/auth/twitch/callback",
+  clientID: CLIENT_ID,
+  clientSecret: CLIENT_SECRET,
+  callbackURL: CALLBACK_URL,
   scope: ["user_read", "chat:edit", "chat:read"]
 },
 /*#__PURE__*/
@@ -235,6 +240,23 @@ app.get('/auth/test', function (req, res) {
   res.json({
     isAuthenticated: isAuth,
     user: req.user
+  });
+});
+app.get('/auth/anonymous', function (req, res) {
+  console.log('Creating anonymous access token');
+  console.log(req);
+  var response = (0, _nodeFetch["default"])("https://id.twitch.tv/oauth2/authorize?&client_secret=".concat(CLIENT_SECRET, "&grant_type=client_credentials"), {
+    method: 'POST'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (obj) {
+    return console.log(obj);
+  }).then(function (obj) {
+    return res.json({
+      accessToken: obj.access_token
+    });
+  })["catch"](function (error) {
+    return console.log('Error creating anonymous credentials: ', error);
   });
 });
 module.exports = app;

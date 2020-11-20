@@ -9,12 +9,18 @@ import session from 'express-session';
 import regeneratorRuntime from "regenerator-runtime";
 import path from 'path';
 import express from 'express';
+import fetch from 'node-fetch';
 require('dotenv').config();
 
 const LOCAL_PORT = 8081;
 const DEPLOY_URL = process.env.NODE_ENV === "production" ? "" : "http://localhost:8081";
+const CALLBACK_URL = DEPLOY_URL + "/auth/twitch/callback";
 const PORT = process.env.HTTP_PORT || LOCAL_PORT;
+
 const TwitchStrategy = passportTwitch.Strategy;
+const CLIENT_ID = "19fbkc20uggbz1a7bcka2azyr2clsu";
+const CLIENT_SECRET = "4m1ss0l88dgxw2oxh1mr0bi91hb3o6";
+
 const app = express();
 var token = ""
 
@@ -77,14 +83,14 @@ const User = mongoose.model("User",userSchema);
 //the 'twitch' strategy in passport.js.
 //////////////////////////////////////////////////////////////////////////
 passport.use(new TwitchStrategy({
-  clientID: "19fbkc20uggbz1a7bcka2azyr2clsu",
-  clientSecret: "4m1ss0l88dgxw2oxh1mr0bi91hb3o6",
-  callbackURL: DEPLOY_URL + "/auth/twitch/callback",
+  clientID: CLIENT_ID,
+  clientSecret: CLIENT_SECRET,
+  callbackURL: CALLBACK_URL,
   scope: ["user_read", "chat:edit", "chat:read"]
 },
 //The following function is called after user authenticates with twitch
 async (accessToken, refreshToken, profile, done) => {
-    token = accessToken
+    token = accessToken;
     console.log("User authenticated through Twitch! In passport callback.");
     return done(null, profile);
 }));
@@ -167,6 +173,17 @@ app.get('/auth/test', (req, res) => {
     }
     //Return JSON object to client with results.
     res.json({isAuthenticated: isAuth, user: req.user});
+});
+
+app.get('/auth/anonymous', (req, res) => {
+  console.log('Creating anonymous access token');
+  console.log(req);
+  const response = fetch(`https://id.twitch.tv/oauth2/authorize?&client_secret=${CLIENT_SECRET}&grant_type=client_credentials`, {
+    method: 'POST'
+  }).then(response => response.json())
+    .then(obj => console.log(obj))
+    .then(obj => res.json({ accessToken: obj.access_token }))
+    .catch(error => console.log('Error creating anonymous credentials: ', error));
 });
 
 module.exports = app;

@@ -30,6 +30,7 @@ class TwitchChatClient extends React.Component {
             channel: null,
             isAuthenticated: false,
             isAnonymous: false,
+            accessToken: ""
         };
     }
 
@@ -48,6 +49,7 @@ class TwitchChatClient extends React.Component {
                         this.setState({
                             userObj: obj.user,
                             isAuthenticated: true,
+                            accessToken: obj.user.token
                         });
                     }
                 });
@@ -55,7 +57,14 @@ class TwitchChatClient extends React.Component {
     }
 
     setAnonMode = () => {
-        this.setState({ isAnonymous: true });
+        fetch("/auth/anonymous")
+            .then(response => response.json())
+            .then(obj => {
+                this.setState({
+                    isAnon: true,
+                    accessToken: obj.accessToken
+                });
+            });
     }
 
     changeChannel = (newChannel) => {
@@ -95,7 +104,7 @@ class TwitchChatClient extends React.Component {
         } else {
             return (
                 <>
-                    <StreamSelect changeChannel={this.changeChannel} />
+                    <StreamSelect changeChannel={this.changeChannel} accessToken={this.state.accessToken} />
                     <ChatStream client={client} />
                     <ChatTextBox channel={channel} isAnon={isAnonymous} client={client} userObj={userObj} />
                 </>

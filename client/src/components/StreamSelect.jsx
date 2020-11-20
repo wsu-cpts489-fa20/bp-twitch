@@ -1,5 +1,6 @@
 import React from "react";
 import Input from "@material-ui/core/Input";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { withStyles } from '@material-ui/styles';
 
 const styles = {
@@ -20,11 +21,29 @@ class StreamSelect extends React.Component {
     super();
     this.state = {
       channel: "",
+      suggestions: []
     };
   }
 
   handleChange = (e) => {
     this.setState({ channel: e.target.value });
+
+    const requestUrl = `https://api.twitch.tv/helix/search/channels?query=${this.state.channel}`;
+    console.log('Request URL: ', requestUrl);
+    const response = fetch(requestUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': this.props.accessToken,
+        'Client-Id': '19fbkc20uggbz1a7bcka2azyr2clsu'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success: ', data);
+    })
+    .catch(error => {
+      console.log('Error: ', error);
+    });
   }
 
   keyPress = (e) => {
@@ -44,6 +63,7 @@ class StreamSelect extends React.Component {
         defaultValue={this.state.channel}
         onChange={this.handleChange}
         onKeyDown={this.keyPress}
+        //options={this.state.suggestions}
         placeholder="enter a channel name..."
         id="streamSelect"
         color="secondary"
