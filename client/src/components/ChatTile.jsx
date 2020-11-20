@@ -1,4 +1,5 @@
 import React from "react";
+import uuid from 'react-uuid';
 import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles({
@@ -44,17 +45,17 @@ function ChatTile (props) {
     var chatBadges = Object.keys(user.badges || {})
     return (
         <div className={classes.tile}>
-            <div className={classes.author}>
+            <div onClick={() => props.setUser(user)} className={classes.author}>
                 { chatBadges.map(value => {
                     const badge =  badges.badge_sets[value].versions["1"];
                     return (
-                    <>
+                    <React.Fragment key={uuid()}>
                         <img style={{width: "14px", height: "14px" }} src={badge.image_url_1x} title={badge.title} alt=""/> 
                         <span>&nbsp;</span>
-                    </>
+                    </React.Fragment>
                     )
                 })}
-                <div style={{display: "inline-block", paddingTop:"-5px"}}>{user['display-name']}</div>
+                <div  style={{display: "inline-block", paddingTop:"-5px"}}>{user['display-name']}</div>
             </div>
             <div className={classes.message} description={props.message}>{props.message}</div>
         </div>
