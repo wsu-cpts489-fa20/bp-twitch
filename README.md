@@ -1,3 +1,18 @@
+# Milestone 2
+## Code Quality Files
+
+`client/src/views/TwitchChatClient.jsx` , `client/src/components/ChatStream.jsx`
+
+## Summary of Work Done
+This sprint we completed the following features: 
+
+- Sending chat messages as an authenticated user.
+
+- Processing all badges to decorate users in a chat stream.
+
+- Integrating testCafe with the electron framework. 
+
+
 # bp-twitch
 
 **bp-twitch** is a desktop Twitch chat client based on the MERN stack architecture.
