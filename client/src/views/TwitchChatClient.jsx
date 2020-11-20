@@ -91,7 +91,7 @@ class TwitchChatClient extends React.Component {
     getAppBody = () => {
         const { client, channel, userObj, isAuthenticated, isAnonymous } = this.state;
         if (!isAuthenticated && !isAnonymous) {
-            return <LoginPage setTestMode={this.setTestMode} setAnonMode={this.setAnonMode} />
+            return <LoginPage setAnonMode={this.setAnonMode} />
         } else {
             return (
                 <>
