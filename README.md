@@ -12,6 +12,8 @@
 > - Processing all badges to decorate users in a chat stream.
 >
 > - Integrating testCafe with the electron framework. 
+> 
+> - Visual indictation of authenticated user in header.
 
 
 # bp-twitch

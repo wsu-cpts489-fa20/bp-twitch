@@ -1,5 +1,5 @@
 {
     "mainWindowUrl": "http://localhost:8081",
     "appPath": "./",
-    "appArgs": ["electron", ".", "R2den", "oauth:aynt4c4rojmi09t1l376zi2ag59d1v"]
+    "appArgs": ["electron", ".", "R2den", "oauth:4olfq6sk36jrtu1kib8ltz2nlaium1"]
 }
