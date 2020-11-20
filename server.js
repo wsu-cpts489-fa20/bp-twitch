@@ -9,7 +9,8 @@ import session from 'express-session';
 import regeneratorRuntime from "regenerator-runtime";
 import path from 'path';
 import express from 'express';
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 const LOCAL_PORT = 8081;
 const DEPLOY_URL = process.env.NODE_ENV === "production" ? "" : "http://localhost:8081";
@@ -28,7 +29,7 @@ import mongoose from 'mongoose';
 const connectStr = "mongodb+srv://dbAdmin:ZBreTCg72R6acylV@ia7-radewyatt.vcp1c.mongodb.net/appdb?retryWrites=true&w=majority";
 mongoose.connect(connectStr, {useNewUrlParser: true, useUnifiedTopology: true})
   .then(
-    () =>  {console.log(`Connected to ${connectStr}.`)},
+    () =>  {console.log(`Connected to ${connectStr}.`);},
     err => {console.error(`Error connecting to ${connectStr}: ${err}`)}
   );
 

@@ -12,6 +12,8 @@ var _path = _interopRequireDefault(require("path"));
 
 var _express = _interopRequireDefault(require("express"));
 
+var _dotenv = _interopRequireDefault(require("dotenv"));
+
 var _mongoose = _interopRequireDefault(require("mongoose"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -20,7 +22,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-require('dotenv').config();
+_dotenv["default"].config();
 
 var LOCAL_PORT = 8081;
 var DEPLOY_URL = process.env.NODE_ENV === "production" ? "" : "http://localhost:8081";

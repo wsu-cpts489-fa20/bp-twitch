@@ -105,9 +105,10 @@ class TwitchChatClient extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const { userObj } = this.state;
         return (
             <div className={classes.appcontainer}>
-                <ElectronBar />
+                <ElectronBar user={userObj} />
                 {this.getAppBody()}
             </div>
         );

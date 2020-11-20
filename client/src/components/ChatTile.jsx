@@ -45,17 +45,18 @@ function ChatTile (props) {
     return (
         <div className={classes.tile}>
             <div className={classes.author}>
-                { chatBadges.map(value => { 
+                { chatBadges.map(value => {
+                    const badge =  badges.badge_sets[value].versions["1"];
                     return (
                     <>
-                        <img style={{width: "14px", height: "14px" }} src={badges.badge_sets[value].versions["1"].image_url_1x} /> 
+                        <img style={{width: "14px", height: "14px" }} src={badge.image_url_1x} title={badge.title} alt=""/> 
                         <span>&nbsp;</span>
                     </>
                     )
                 })}
                 <div style={{display: "inline-block", paddingTop:"-5px"}}>{user['display-name']}</div>
             </div>
-            <div className={classes.message}>{props.message}</div>
+            <div className={classes.message} description={props.message}>{props.message}</div>
         </div>
     )
 }
