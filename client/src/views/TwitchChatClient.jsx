@@ -6,12 +6,10 @@ import StreamSelect from "../components/StreamSelect";
 import ElectronBar from "../components/ElectronBar";
 import LoginPage from "../components/LoginPage";
 import ChatTextBox from "../components/ChatTextBox"
-// get your token by inspecting the websocket traffic or by expanding the object that is automatically printed to the console when enter is pressed in the channel search box
-// all the online oauth token generators don't request permission to chat so they don't work
-const localUserObj = {
-    login: 'your_login_name',
-    token: 'oauth:your_oauth_token'
-}
+const { remote } = window.require('electron');
+
+const tcUsr = remote.getGlobal('commandLineArgs').username;
+const tcToken = remote.getGlobal('commandLineArgs').token;
 
 const styles = {
   appcontainer: {
@@ -37,6 +35,11 @@ class TwitchChatClient extends React.Component {
 
     componentDidMount() {
         const { isAuthenticated } = this.state;
+        // if we are in test mode.
+        if (tcUsr && tcToken) {
+            const testObj = {login: tcUsr, token: tcToken.split(":")[1]}
+            this.setState({userObj: testObj, isAuthenticated: true})
+        } 
         if (!isAuthenticated) {
             fetch("/auth/test")
                 .then((response) => response.json())
@@ -53,11 +56,6 @@ class TwitchChatClient extends React.Component {
 
     setAnonMode = () => {
         this.setState({ isAnonymous: true });
-    }
-
-    setTestMode = () => {
-        localUserObj.token = localUserObj.token.split(":")[1]
-        this.setState({ userObj: localUserObj, isAuthenticated: true });
     }
 
     changeChannel = (newChannel) => {
@@ -82,7 +80,7 @@ class TwitchChatClient extends React.Component {
                 },
                 identity: {
                     username: this.state.userObj.login,
-                    "password": password
+                    password: password
                 },
                 channels: [newChannel],
             });
@@ -90,21 +88,27 @@ class TwitchChatClient extends React.Component {
         this.setState({ client: newClient });
     };
 
+    getAppBody = () => {
+        const { client, channel, userObj, isAuthenticated, isAnonymous } = this.state;
+        if (!isAuthenticated && !isAnonymous) {
+            return <LoginPage setTestMode={this.setTestMode} setAnonMode={this.setAnonMode} />
+        } else {
+            return (
+                <>
+                    <StreamSelect changeChannel={this.changeChannel} />
+                    <ChatStream client={client} />
+                    <ChatTextBox channel={channel} isAnon={isAnonymous} client={client} userObj={userObj} />
+                </>
+            )
+        }
+    }
+
     render() {
-        const { client, isAuthenticated, isAnonymous } = this.state;
         const { classes } = this.props;
         return (
             <div className={classes.appcontainer}>
                 <ElectronBar />
-                {!isAuthenticated && !isAnonymous ? (
-                    <LoginPage setTestMode={this.setTestMode} setAnonMode={this.setAnonMode} />
-                ) : (
-                        <>
-                            <StreamSelect changeChannel={this.changeChannel} />
-                            <ChatStream client={client} />
-                            { this.state.isAuthenticated && this.state.client != null ? <ChatTextBox channel={ this.state.channel } client={this.state.client} userObj={this.state.userObj} /> : null}
-                        </>
-                    )}
+                {this.getAppBody()}
             </div>
         );
     }

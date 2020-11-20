@@ -54,15 +54,6 @@ function LoginPage(props) {
       >
         Continue as Anonymous User
       </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        className={classes.button}
-        onClick={props.setTestMode}
-        id="testLoginButton"
-      >
-      Continue in test mode
-      </Button>
     </div>
   );
 }
