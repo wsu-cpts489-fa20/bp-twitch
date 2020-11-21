@@ -12,6 +12,8 @@ var _path = _interopRequireDefault(require("path"));
 
 var _express = _interopRequireDefault(require("express"));
 
+var _dotenv = _interopRequireDefault(require("dotenv"));
+
 var _mongoose = _interopRequireDefault(require("mongoose"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -20,13 +22,14 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-require('dotenv').config();
+_dotenv["default"].config();
 
 var LOCAL_PORT = 8081;
 var DEPLOY_URL = process.env.NODE_ENV === "production" ? "" : "http://localhost:8081";
 var PORT = process.env.HTTP_PORT || LOCAL_PORT;
 var TwitchStrategy = _passportTwitchNew["default"].Strategy;
-var app = (0, _express["default"])(); //////////////////////////////////////////////////////////////////////////
+var app = (0, _express["default"])();
+var token = ""; //////////////////////////////////////////////////////////////////////////
 //MONGOOSE SET-UP
 //The following code sets up the app to connect to a MongoDB database
 //using the mongoose library.
@@ -130,7 +133,7 @@ _passport["default"].use(new TwitchStrategy({
   clientID: "19fbkc20uggbz1a7bcka2azyr2clsu",
   clientSecret: "4m1ss0l88dgxw2oxh1mr0bi91hb3o6",
   callbackURL: DEPLOY_URL + "/auth/twitch/callback",
-  scope: "user_read"
+  scope: ["user_read", "chat:edit", "chat:read"]
 },
 /*#__PURE__*/
 //The following function is called after user authenticates with twitch
@@ -140,10 +143,11 @@ function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            token = accessToken;
             console.log("User authenticated through Twitch! In passport callback.");
             return _context.abrupt("return", done(null, profile));
 
-          case 2:
+          case 3:
           case "end":
             return _context.stop();
         }
@@ -223,6 +227,7 @@ app.get('/auth/test', function (req, res) {
   if (isAuth) {
     console.log("User is authenticated");
     console.log("User record tied to session: " + JSON.stringify(req.user));
+    req.user.token = token;
   } else {
     //User is not authenticated
     console.log("User is not authenticated");

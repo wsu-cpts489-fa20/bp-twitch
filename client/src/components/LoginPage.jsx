@@ -42,6 +42,7 @@ function LoginPage(props) {
         className={[classes.button, classes.twitchButton].join(" ")}
         onClick={handleTwitchOauthLogin}
         startIcon={<Icon icon={twitchIcon} />}
+        id="twitchLoginBtn"
       >
         Login with Twitch
       </Button>
