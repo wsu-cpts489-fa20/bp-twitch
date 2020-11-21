@@ -14,6 +14,12 @@
 > - Integrating testCafe with the electron framework. 
 > 
 > - Visual indictation of authenticated user in header.
+>
+> - Modal window user-summaries. Triggered on click of a chatter's name.
+
+#### Testing Link
+
+> <https://i.imgur.com/eiGoPDf.gif>
 
 
 # bp-twitch
