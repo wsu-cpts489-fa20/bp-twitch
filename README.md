@@ -2,7 +2,8 @@
 
 #### Code Quality Files
 
-`client/src/views/TwitchChatClient.jsx` , `client/src/components/ChatStream.jsx`
+> [TwitchChatClient](https://github.com/wsu-cpts489-fa20/bp-twitch/blob/master/client/src/views/TwitchChatClient.jsx) , 
+> [ChatStream](https://github.com/wsu-cpts489-fa20/bp-twitch/blob/master/client/src/components/ChatStream.jsx)
 
 #### Summary of Work Done
 > This sprint we completed the following features: 
