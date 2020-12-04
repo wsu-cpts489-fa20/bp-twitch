@@ -58,6 +58,7 @@ class TwitchChatClient extends React.Component {
         this.setState({ isAnonymous: true });
     }
 
+    // create new twitch client based on input string which holds channel name
     changeChannel = (newChannel) => {
         this.setState({ channel: newChannel })
         const { client } = this.state;

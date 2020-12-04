@@ -29,6 +29,7 @@ class ChatStream extends React.Component {
 
     componentDidUpdate(prevProps) {
         const { client } = this.props;
+        // if we detect a new twitch client, generate websocket listener and update chat state
         if (!prevProps.client || client.channels[0] !== prevProps.client.channels[0]) {
             this.updateTwitchClient();
             this.setState({chats: []});
@@ -37,12 +38,16 @@ class ChatStream extends React.Component {
 
     updateTwitchClient() {
         const { client } = this.props;
+        // connect to the new twitch client
         client.connect();
+        // on a new message, add it to our local state.
         client.on('message', (channel, user, message, self) => {
+            // only keep 200 chats in memory at a time.
             if (this.state.chats.length === 200)
                 this.state.chats.shift();
             this.state.chats.push([user, message])
             this.setState({chats: this.state.chats});
+            // auto scroll to bottom for the first 20 chat messages
             if (this.state.chats.length <= 20)
                 this.scrollToBottom()
         });
