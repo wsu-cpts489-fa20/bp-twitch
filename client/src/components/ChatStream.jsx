@@ -7,7 +7,7 @@ import ScrollableFeed from 'react-scrollable-feed'
 
 const styles = {
     streamContainer: {
-        overflow: "auto",
+        overflow: "scroll",
         "&::-webkit-scrollbar": {
             display: "none"
         }
@@ -21,8 +21,8 @@ class ChatStream extends React.Component {
             chats: [],
             channel: null,
             user: null,
-            onBottom: true
         }
+
         this.messagesEndRef = React.createRef();
         this.setDetailUser = this.setDetailUser.bind(this);
     }
@@ -39,10 +39,12 @@ class ChatStream extends React.Component {
         const { client } = this.props;
         client.connect();
         client.on('message', (channel, user, message, self) => {
-            if (this.state.chats.length === 50)
+            if (this.state.chats.length === 200)
                 this.state.chats.shift();
             this.state.chats.push([user, message])
             this.setState({chats: this.state.chats});
+            if (this.state.chats.length <= 20)
+                this.scrollToBottom()
         });
     }
 
@@ -61,6 +63,10 @@ class ChatStream extends React.Component {
         }
     }
 
+    scrollToBottom() {
+        this.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+
     render() {
         const { classes } = this.props;
         const items = this.state.chats.map(function(item) {
@@ -70,6 +76,7 @@ class ChatStream extends React.Component {
             <ScrollableFeed className={classes.streamContainer}>
                 { this.renderUserDetail() }
                 {items}
+                <div ref={this.messagesEndRef} />
             </ScrollableFeed>
         )
     }
