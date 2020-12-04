@@ -30,15 +30,20 @@ class StreamSelect extends React.Component {
   keyPress = (e) => {
     // if the enter key is pressed change the channel
     if (e.keyCode === 13) {
+        this.reactToUserChange()
+    }
+  }
+
+  reactToUserChange = () => {
       const { changeChannel } = this.props;
       const { channel } = this.state;
       changeChannel(channel);
-    }
   }
 
   render() {
     const { classes } = this.props;
     return (
+      <>
       <Input
         className={classes.mainInput}
         defaultValue={this.state.channel}
@@ -53,6 +58,18 @@ class StreamSelect extends React.Component {
         spellCheck={false}
         fullWidth
       />
+      <a 
+        onClick={ this.reactToUserChange }
+        style={{
+            position: "absolute",
+            right: "10px",
+            color: "gray",
+            top: "43px",
+            fontSize: "0.75em",
+            cursor: "pointer"
+        }}
+      ><i><u>Connect to a server</u></i></a>
+      </>
     );
   }
 }

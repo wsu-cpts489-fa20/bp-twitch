@@ -23,6 +23,13 @@ class ChatTextBox extends React.Component {
         }
     }
 
+    handleChatSend = () => {
+        const { client, channel } = this.props;
+        const { chatBoxText } = this.state;
+        client.say(channel, chatBoxText);
+        this.setState({chatBoxText: ""})
+    }
+
     setText = (newText) => {
         this.setState({"chatBoxText": newText.target.value})
     }  
@@ -32,12 +39,8 @@ class ChatTextBox extends React.Component {
     }
 
     keyPress = (e) => {
-        const { client, channel } = this.props;
-        const { chatBoxText } = this.state;
-        // if the enter key is pressed change the channel
         if (e.keyCode === 13) {
-            client.say(channel, chatBoxText);
-            this.setState({chatBoxText: ""})
+            this.handleChatSend()
         }
     }
 
@@ -46,6 +49,7 @@ class ChatTextBox extends React.Component {
         const { chatBoxText } = this.state;
         return (
             (!isAnon && client ? 
+                <>
                 <Input
                     className={classes.mainInput}
                     value={chatBoxText}
@@ -60,6 +64,18 @@ class ChatTextBox extends React.Component {
                     id="chatTextBox"
                     fullWidth
                 />
+                <a 
+                    onClick={ this.handleChatSend }
+                    style={{
+                        position: "absolute",
+                        right: "10px",
+                        color: "gray",
+                        bottom: "10px",
+                        fontSize: "0.75em",
+                        cursor: "pointer"
+                    }}
+                ><i><u>Send</u></i></a>
+                </>
                 : null
             )
         )
