@@ -3,10 +3,11 @@ import { withStyles } from '@material-ui/styles';
 import uuid from 'react-uuid';
 import ChatTile from "./ChatTile";
 import UserDetail from "./UserDetail";
+import ScrollableFeed from 'react-scrollable-feed'
 
 const styles = {
     streamContainer: {
-        overflow: "auto",
+        overflow: "scroll",
         "&::-webkit-scrollbar": {
             display: "none"
         }
@@ -19,8 +20,9 @@ class ChatStream extends React.Component {
         this.state = {
             chats: [],
             channel: null,
-            user: null
+            user: null,
         }
+
         this.messagesEndRef = React.createRef();
         this.setDetailUser = this.setDetailUser.bind(this);
     }
@@ -37,16 +39,13 @@ class ChatStream extends React.Component {
         const { client } = this.props;
         client.connect();
         client.on('message', (channel, user, message, self) => {
-            if (this.state.chats.length === 50)
+            if (this.state.chats.length === 200)
                 this.state.chats.shift();
             this.state.chats.push([user, message])
             this.setState({chats: this.state.chats});
-            this.scrollToBottom();
+            if (this.state.chats.length <= 20)
+                this.scrollToBottom()
         });
-    }
-
-    scrollToBottom() {
-        this.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
 
     setDetailUser = (newUser) => {
@@ -64,18 +63,21 @@ class ChatStream extends React.Component {
         }
     }
 
+    scrollToBottom() {
+        this.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+
     render() {
         const { classes } = this.props;
         const items = this.state.chats.map(function(item) {
             return <ChatTile key={uuid()} setUser={this.setDetailUser} user={item[0]} message={item[1]}/>;
         }, this);
-        return (
-            <div className={classes.streamContainer} ref={this.containerRef} >
+        return (     
+            <ScrollableFeed className={classes.streamContainer}>
                 { this.renderUserDetail() }
                 {items}
                 <div ref={this.messagesEndRef} />
-            </div>
-
+            </ScrollableFeed>
         )
     }
 }
