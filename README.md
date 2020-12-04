@@ -18,6 +18,7 @@
 > - Modal window user-summaries. Triggered on click of a chatter's name.
 
 #### Testing Link
+> This will bring you to an imgur page. Click on the thumbnail of the video for it to play!
 
 > <https://i.imgur.com/eiGoPDf.gif>
 
