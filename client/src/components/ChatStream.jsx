@@ -4,7 +4,6 @@ import uuid from 'react-uuid';
 import ChatTile from "./ChatTile";
 import UserDetail from "./UserDetail";
 import ScrollableFeed from 'react-scrollable-feed'
-import StreamDetail from "./StreamDetail"
 
 const styles = {
     streamContainer: {
