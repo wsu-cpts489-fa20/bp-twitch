@@ -117,7 +117,7 @@ class StreamDetail extends React.Component {
     render() {
         // const { classes } = this.props;
         return (
-            <div style={styles.modal}>
+            <div id="detailsModal" style={styles.modal}>
                 <div style={styles.modalContent}>
                     <div onClick={this.props.hideDetails} style={styles.modalHeader}>
                         <div style={styles.modalClose} >
@@ -127,10 +127,10 @@ class StreamDetail extends React.Component {
                     <span style={{color: "white"}}>
                         { this.state.streamInfo === undefined ? "Loading..." :
                         <>
+                            Title: { this.state.streamInfo.title }
                             Display name: { this.state.streamInfo.display_name }<br />
                             Live: { this.state.streamInfo.is_live ? "Yes" : "No" }<br />
                             Started at: { Date("2020-12-10T21:54:54Z").split("GMT")[0] }<br />
-                            Title: { this.state.streamInfo.title }
                         </>
                         }
                     </span>

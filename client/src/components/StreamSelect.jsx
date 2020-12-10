@@ -77,6 +77,7 @@ class StreamSelect extends React.Component {
         ><i><u>Connect to a server</u></i></a>
         &nbsp;|&nbsp; 
         <a 
+            id="statsLink"
             onClick={ this.props.showDetails }
             style={{
                 cursor: "pointer"
