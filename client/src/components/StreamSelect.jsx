@@ -40,10 +40,6 @@ class StreamSelect extends React.Component {
       changeChannel(channel);
   }
 
-  openServerStats = () => {
-
-  }
-
   render() {
     const { classes } = this.props;
     return (
