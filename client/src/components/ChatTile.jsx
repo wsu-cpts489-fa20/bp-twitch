@@ -1,6 +1,7 @@
 import React from "react";
 import uuid from 'react-uuid';
 import { makeStyles } from '@material-ui/styles';
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
     tile: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles({
     },
     author: {
         minWidth: "20%",
-        backgroundColor: "rgba(255,255,255,0.15)",
+        backgroundColor: "rgba(0,0,0,0.2)",
         alignItems: "stretch",
         textAlign: "center",
         borderRadius: "4px",
@@ -26,9 +27,8 @@ const useStyles = makeStyles({
     },
     message: {
         width: "80%",
-        backgroundColor: "rgba(255,255,255,0.1)",
+        backgroundColor: "rgba(0,0,0,0.2)",
         alignItems: "stretch",
-        color: "white",
         paddingLeft: "10px",
         borderRadius: "4px",
         display: "flex",
@@ -55,9 +55,9 @@ function ChatTile (props) {
                     </React.Fragment>
                     )
                 })}
-                <div  style={{display: "inline-block", paddingTop:"-5px"}}>{user['display-name']}</div>
+                <Typography  style={{display: "inline-block", paddingTop:"-5px"}}>{user['display-name']}</Typography>
             </div>
-            <div className={classes.message} description={props.message}>{props.message}</div>
+            <Typography className={classes.message} description={props.message}>{props.message}</Typography>
         </div>
     )
 }

@@ -4,10 +4,9 @@ import { withStyles } from '@material-ui/styles';
 
 const styles = {
   mainInput: {
-    backgroundColor: "black",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   innerInput: {
-    color: "white", 
     margin: "0 10px 0 10px",
     '&::placeholder': {
       fontStyle: 'italic',
