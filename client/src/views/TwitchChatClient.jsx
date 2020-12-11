@@ -6,6 +6,7 @@ import StreamSelect from "../components/StreamSelect";
 import ElectronBar from "../components/ElectronBar";
 import LoginPage from "../components/LoginPage";
 import ChatTextBox from "../components/ChatTextBox"
+import StreamDetail from "../components/StreamDetail"
 const { remote } = window.require('electron');
 
 const tcUsr = remote.getGlobal('commandLineArgs').username;
@@ -30,6 +31,7 @@ class TwitchChatClient extends React.Component {
             channel: null,
             isAuthenticated: false,
             isAnonymous: false,
+            showStreamDetails: false,
         };
     }
 
@@ -89,6 +91,14 @@ class TwitchChatClient extends React.Component {
         this.setState({ client: newClient });
     };
 
+    hideStreamDetails = () => {
+        this.setState({showStreamDetails: false})
+    }
+
+    showStreamDetails = () => {
+        this.setState({showStreamDetails: true})
+    }
+
     getAppBody = () => {
         const { client, channel, userObj, isAuthenticated, isAnonymous } = this.state;
         if (!isAuthenticated && !isAnonymous) {
@@ -96,7 +106,8 @@ class TwitchChatClient extends React.Component {
         } else {
             return (
                 <>
-                    <StreamSelect changeChannel={this.changeChannel} />
+                    <StreamSelect showDetails={this.showStreamDetails} changeChannel={this.changeChannel} />
+                    { this.state.showStreamDetails && <StreamDetail channel={channel} userObj={ userObj } hideDetails={this.hideStreamDetails} /> }
                     <ChatStream client={client} />
                     <ChatTextBox channel={channel} isAnon={isAnonymous} client={client} userObj={userObj} />
                 </>
