@@ -3,6 +3,16 @@ import { Selector } from 'testcafe'
 fixture `AuthenticatedUserTests`
     .page `http://localhost:8081`
 
+test('can load stream details', async t => {
+    await t.typeText("#streamSelect", "r2den")
+    .click("#streamSelect")
+    .pressKey("enter")
+    .wait(300)
+    .click("#statsLink")
+    .wait(500)
+    const detailsModalExists = Selector('[id=detailsModal]').exists
+    await t.expect(detailsModalExists).ok()
+})
 test('confirm by default we are authenticated, but not connected to a channel', async t => {
     const streamSelectExists = Selector('[id=streamSelect]').exists;
     const chatTextBoxExists = Selector('[id=chatTextBox]').exists;
