@@ -4,16 +4,15 @@ import { withStyles } from '@material-ui/styles';
 
 const styles = {
     mainInput: {
-        backgroundColor: "black",
+      backgroundColor: "rgba(0,0,0,0.5)",
     },
     innerInput: {
-        color: "white",
-        margin: "0 10px 0 10px",
-        '&::placeholder': {
-            fontStyle: 'italic',
-        },
+      margin: "0 10px 0 10px",
+      '&::placeholder': {
+        fontStyle: 'italic',
+      },
     }
-}
+  }
 
 class ChatTextBox extends React.Component {
     constructor(props) {
@@ -49,7 +48,6 @@ class ChatTextBox extends React.Component {
         const { chatBoxText } = this.state;
         return (
             (!isAnon && client ? 
-                <>
                 <Input
                     className={classes.mainInput}
                     value={chatBoxText}
@@ -64,18 +62,6 @@ class ChatTextBox extends React.Component {
                     id="chatTextBox"
                     fullWidth
                 />
-                <a 
-                    onClick={ this.handleChatSend }
-                    style={{
-                        position: "absolute",
-                        right: "10px",
-                        color: "gray",
-                        bottom: "10px",
-                        fontSize: "0.75em",
-                        cursor: "pointer"
-                    }}
-                ><i><u>Send</u></i></a>
-                </>
                 : null
             )
         )

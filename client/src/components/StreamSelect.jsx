@@ -1,13 +1,13 @@
 import React from "react";
 import Input from "@material-ui/core/Input";
 import { withStyles } from '@material-ui/styles';
+import { Button, Typography } from "@material-ui/core";
 
 const styles = {
   mainInput: {
-    backgroundColor: "black",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   innerInput: {
-    color: "white", 
     margin: "0 10px 0 10px",
     '&::placeholder': {
       fontStyle: 'italic',
@@ -58,18 +58,7 @@ class StreamSelect extends React.Component {
         spellCheck={false}
         fullWidth
       />
-      <a 
-        onClick={ this.reactToUserChange }
-        style={{
-            position: "absolute",
-            right: "10px",
-            color: "gray",
-            top: "43px",
-            fontSize: "0.75em",
-            cursor: "pointer"
-        }}
-      ><i><u>Connect to a server</u></i></a>
-      </>
+    </>
     );
   }
 }

@@ -30,7 +30,7 @@ class ChatStream extends React.Component {
     componentDidUpdate(prevProps) {
         const { client } = this.props;
         // if we detect a new twitch client, generate websocket listener and update chat state
-        if (!prevProps.client || client.channels[0] !== prevProps.client.channels[0]) {
+        if (!prevProps.client && client || (prevProps.client && client && client.channels[0] !== prevProps.client.channels[0])) {
             this.updateTwitchClient();
             this.setState({chats: []});
         }

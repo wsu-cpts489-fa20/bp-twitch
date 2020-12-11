@@ -5,7 +5,9 @@ import ChatStream from "../components/ChatStream";
 import StreamSelect from "../components/StreamSelect";
 import ElectronBar from "../components/ElectronBar";
 import LoginPage from "../components/LoginPage";
-import ChatTextBox from "../components/ChatTextBox"
+import ChatTextBox from "../components/ChatTextBox";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
 const { remote } = window.require('electron');
 
 const tcUsr = remote.getGlobal('commandLineArgs').username;
@@ -15,13 +17,12 @@ const styles = {
   appcontainer: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#121212",
     display: "grid",
     "grid-template-rows": "24px .1fr 1fr",
   },
 };
 
-class TwitchChatClient extends React.Component {
+class TwitchChatClient extends React.PureComponent {
     constructor() {
         super();
         this.state = {
@@ -30,6 +31,7 @@ class TwitchChatClient extends React.Component {
             channel: null,
             isAuthenticated: false,
             isAnonymous: false,
+            theme: "light"
         };
     }
 
@@ -56,6 +58,14 @@ class TwitchChatClient extends React.Component {
 
     setAnonMode = () => {
         this.setState({ isAnonymous: true });
+    }
+
+    toggleTheme = () => {
+        const { theme } = this.state;
+        if (theme === "light")
+            this.setState({theme: "dark"})
+        else 
+            this.setState({theme: "light"})
     }
 
     // create new twitch client based on input string which holds channel name
@@ -106,12 +116,20 @@ class TwitchChatClient extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { userObj } = this.state;
+        const { userObj, theme } = this.state;
+        const muitheme = createMuiTheme({
+            palette: {
+              type: theme,
+            },
+          });
         return (
-            <div className={classes.appcontainer}>
-                <ElectronBar user={userObj} />
-                {this.getAppBody()}
-            </div>
+            <ThemeProvider theme={muitheme}>
+                <CssBaseline />
+                <div className={classes.appcontainer} data-testid="app-container">
+                    <ElectronBar user={userObj} toggleTheme={this.toggleTheme} theme={theme} />
+                    {this.getAppBody()}
+                </div>
+            </ThemeProvider>
         );
     }
 }
