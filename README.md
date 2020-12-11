@@ -1,21 +1,14 @@
-### Milestone 2
+### Milestone 4
 
 #### Code Quality Files
 
-`client/src/views/TwitchChatClient.jsx` , `client/src/components/ChatStream.jsx`
+> [TwitchChatClient](https://github.com/wsu-cpts489-fa20/bp-twitch/blob/master/client/src/views/TwitchChatClient.jsx) , 
+> [ChatStream](https://github.com/wsu-cpts489-fa20/bp-twitch/blob/master/client/src/components/ChatStream.jsx)
 
 #### Summary of Work Done
 > This sprint we completed the following features: 
 >
-> - Sending chat messages as an authenticated user.
->
-> - Processing all badges to decorate users in a chat stream.
->
-> - Integrating testCafe with the electron framework. 
-> 
-> - Visual indictation of authenticated user in header.
->
-> - Modal window user-summaries. Triggered on click of a chatter's name.
+> - Added the ability to view information about the stream you're watching
 
 #### Testing Link
 > This will bring you to an imgur page. Click on the thumbnail of the video for it to play!

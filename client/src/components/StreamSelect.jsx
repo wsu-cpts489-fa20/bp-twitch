@@ -1,7 +1,6 @@
 import React from "react";
 import Input from "@material-ui/core/Input";
 import { withStyles } from '@material-ui/styles';
-import { Button, Typography } from "@material-ui/core";
 
 const styles = {
   mainInput: {
@@ -58,7 +57,29 @@ class StreamSelect extends React.Component {
         spellCheck={false}
         fullWidth
       />
-    </>
+      <span style={{
+        position: "absolute",
+        right: "10px",
+        top: "43px",
+        fontSize: "0.75em",
+        color: "gray",
+      }}>
+        <a 
+            onClick={ this.reactToUserChange }
+            style={{
+                cursor: "pointer"
+            }}
+        ><i><u>Connect to a server</u></i></a>
+        &nbsp;|&nbsp; 
+        <a 
+            id="statsLink"
+            onClick={ this.props.showDetails }
+            style={{
+                cursor: "pointer"
+            }}
+        ><i><u>Server stats</u></i></a>
+      </span>
+      </>
     );
   }
 }

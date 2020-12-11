@@ -8,6 +8,7 @@ import LoginPage from "../components/LoginPage";
 import ChatTextBox from "../components/ChatTextBox";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import StreamDetail from "../components/StreamDetail"
 const { remote } = window.require('electron');
 
 const tcUsr = remote.getGlobal('commandLineArgs').username;
@@ -31,7 +32,8 @@ class TwitchChatClient extends React.PureComponent {
             channel: null,
             isAuthenticated: false,
             isAnonymous: false,
-            theme: "light"
+            theme: "light",
+            showStreamDetails: false,
         };
     }
 
@@ -99,6 +101,14 @@ class TwitchChatClient extends React.PureComponent {
         this.setState({ client: newClient });
     };
 
+    hideStreamDetails = () => {
+        this.setState({showStreamDetails: false})
+    }
+
+    showStreamDetails = () => {
+        this.setState({showStreamDetails: true})
+    }
+
     getAppBody = () => {
         const { client, channel, userObj, isAuthenticated, isAnonymous } = this.state;
         if (!isAuthenticated && !isAnonymous) {
@@ -106,7 +116,8 @@ class TwitchChatClient extends React.PureComponent {
         } else {
             return (
                 <>
-                    <StreamSelect changeChannel={this.changeChannel} />
+                    <StreamSelect showDetails={this.showStreamDetails} changeChannel={this.changeChannel} />
+                    { this.state.showStreamDetails && <StreamDetail channel={channel} userObj={ userObj } hideDetails={this.hideStreamDetails} /> }
                     <ChatStream client={client} />
                     <ChatTextBox channel={channel} isAnon={isAnonymous} client={client} userObj={userObj} />
                 </>
