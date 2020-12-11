@@ -9,6 +9,10 @@
 > This sprint we completed the following features: 
 >
 > - Added the ability to view information about the stream you're watching
+>
+> - Light/Dark Themes with rocker toggle
+> 
+> - Added the ability to view a summary of a chatter
 
 #### Testing Link
 > This will bring you to an imgur page. Click on the thumbnail of the video for it to play!
