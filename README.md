@@ -1,3 +1,14 @@
+### How to Install TCGod
+
+#### Step 1 - Download the installer.
+> From the homepage of our github repository, click on the release tag on the right hand side of the screen.
+> Then, click on the assets dropdown to expand the html tree.
+> Finally, download the `TCGod-Setup.zip` archive.
+
+#### Step 2 - Execute the installer.
+> Navigate to the location you downloaded the installer and extract the files from the archive.
+> Next, double click on `TCGod Setup 1.0.0.exe` to install and launch the application.
+
 ### Milestone 4
 
 #### Code Quality Files
