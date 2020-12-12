@@ -45,7 +45,7 @@ function ChatTile (props) {
     var chatBadges = Object.keys(user.badges || {})
     return (
         <div className={classes.tile}>
-            <div onClick={() => props.setUser(user)} className={classes.author}>
+            <div onClick={() => props.setUser(user)} className={[classes.author, 'chat-tile-author'].join(' ')}>
                 { chatBadges.map(value => {
                     const badge =  badges.badge_sets[value].versions["1"];
                     return (

@@ -3,16 +3,6 @@ import { Selector } from 'testcafe'
 fixture `AuthenticatedUserTests`
     .page `http://localhost:8081`
 
-test('can load stream details', async t => {
-    await t.typeText("#streamSelect", "r2den")
-    .click("#streamSelect")
-    .pressKey("enter")
-    .wait(300)
-    .click("#statsLink")
-    .wait(500)
-    const detailsModalExists = Selector('[id=detailsModal]').exists
-    await t.expect(detailsModalExists).ok()
-})
 test('confirm by default we are authenticated, but not connected to a channel', async t => {
     const streamSelectExists = Selector('[id=streamSelect]').exists;
     const chatTextBoxExists = Selector('[id=chatTextBox]').exists;
@@ -62,4 +52,35 @@ test('broadcaster badge shows when sending chat in your own channel', async t =>
     // Confirm broadcaster badge exists.
     const broadcasterBadgeExists = Selector('[title=Broadcaster]').exists;
     await t.expect(broadcasterBadgeExists).ok();
+})
+
+test('can load stream details', async t => {
+    await t.typeText("#streamSelect", "r2den")
+    .click("#streamSelect")
+    .pressKey("enter")
+    .wait(300)
+    .click("#statsLink")
+    .wait(500);
+    const detailsModalExists = Selector('[id=detailsModal]').exists;
+    await t.expect(detailsModalExists).ok();
+})
+
+test('can load user details', async t => {
+    // connect to stream
+    await t.typeText("#streamSelect", "r2den")
+    .click("#streamSelect")
+    .pressKey("enter");
+
+    // send a chat message
+    await t.typeText("#chatTextBox", "test")
+    .click("#chatTextBox")
+    .wait(1000)
+    .pressKey("enter")
+    .wait(1000);
+
+    // Confirm user modal exists
+    await t.click('[class*=chat-tile-author]')
+    .wait(500);
+    const detailsModalExists = Selector('[data-testid=user-detail-modal]').exists;
+    await t.expect(detailsModalExists).ok()
 })

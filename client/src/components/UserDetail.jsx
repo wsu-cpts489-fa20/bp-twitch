@@ -90,8 +90,6 @@ class UserDetail extends React.Component {
         this.unmount = false;
     }
     componentDidMount() {
-        console.log("props");
-        console.log(this.props);
         const url = "https://api.twitch.tv/kraken/users/" + this.props.user["user-id"];
         fetch(url,
             {
@@ -148,7 +146,7 @@ class UserDetail extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.modal}>
+            <div data-testid="user-detail-modal" className={classes.modal}>
                 <div className={classes.modalContent}>
                     <div onClick={this.props.closeModal} className={classes.modalHeader}>
                         <div className={classes.modalClose}>
