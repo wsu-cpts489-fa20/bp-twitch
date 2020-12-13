@@ -14,7 +14,11 @@ var _express = _interopRequireDefault(require("express"));
 
 var _nodeFetch = _interopRequireDefault(require("node-fetch"));
 
+var _twitchAuth = require("twitch-auth");
+
 var _mongoose = _interopRequireDefault(require("mongoose"));
+
+var _bodyParser = require("body-parser");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -31,6 +35,7 @@ var PORT = process.env.HTTP_PORT || LOCAL_PORT;
 var TwitchStrategy = _passportTwitchNew["default"].Strategy;
 var CLIENT_ID = "19fbkc20uggbz1a7bcka2azyr2clsu";
 var CLIENT_SECRET = "4m1ss0l88dgxw2oxh1mr0bi91hb3o6";
+var authProvider = new _twitchAuth.ClientCredentialsAuthProvider(CLIENT_ID, CLIENT_SECRET);
 var app = (0, _express["default"])();
 var token = ""; //////////////////////////////////////////////////////////////////////////
 //MONGOOSE SET-UP
@@ -242,21 +247,76 @@ app.get('/auth/test', function (req, res) {
     user: req.user
   });
 });
-app.get('/auth/anonymous', function (req, res) {
-  console.log('Creating anonymous access token');
-  console.log(req);
-  var response = (0, _nodeFetch["default"])("https://id.twitch.tv/oauth2/authorize?&client_secret=".concat(CLIENT_SECRET, "&grant_type=client_credentials"), {
-    method: 'POST'
-  }).then(function (response) {
-    return response.json();
-  }).then(function (obj) {
-    return console.log(obj);
-  }).then(function (obj) {
-    return res.json({
-      accessToken: obj.access_token
-    });
-  })["catch"](function (error) {
-    return console.log('Error creating anonymous credentials: ', error);
-  });
-});
+app.get('/auth/anonymous', /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee2(req, res) {
+    var result;
+    return _regeneratorRuntime["default"].wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            console.log('Creating anonymous access token');
+            _context2.next = 3;
+            return authProvider.getAccessToken();
+
+          case 3:
+            result = _context2.sent;
+            console.log("Access Token: ", result);
+            res.json({
+              accessToken: result.accessToken
+            });
+
+          case 6:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function (_x5, _x6) {
+    return _ref2.apply(this, arguments);
+  };
+}());
+app.get('/search/channels', /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee3(req, res) {
+    var reqAccessToken, reqSearchValue, requestUrl, reqResponse;
+    return _regeneratorRuntime["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            reqAccessToken = req.query.accessToken;
+            reqSearchValue = req.query.searchValue;
+            requestUrl = "https://api.twitch.tv/helix/search/channels?query=".concat(reqSearchValue);
+            console.log('Request URL: ', requestUrl);
+            console.log('Request Access Token: ', reqAccessToken);
+            console.log('Request Search Value: ', reqSearchValue);
+            _context3.next = 8;
+            return (0, _nodeFetch["default"])(requestUrl, {
+              method: 'GET',
+              headers: {
+                'Authorization': "Bearer ".concat(reqAccessToken),
+                'Client-Id': CLIENT_ID
+              }
+            }).then(function (reqResponse) {
+              return reqResponse.json();
+            }).then(function (reqResponse) {
+              return console.log(reqResponse);
+            });
+
+          case 8:
+            reqResponse = _context3.sent;
+            res.json(reqResponse);
+
+          case 10:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function (_x7, _x8) {
+    return _ref3.apply(this, arguments);
+  };
+}());
 module.exports = app;

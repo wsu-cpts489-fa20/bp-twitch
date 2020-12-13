@@ -29,6 +29,7 @@
     "path": "^0.12.7",
     "regenerator-runtime": "^0.13.7",
     "testcafe-browser-provider-electron": "^0.0.15",
+    "twitch-auth": "^4.3.6",
     "wait-on": "^5.2.0"
   },
   "devDependencies": {

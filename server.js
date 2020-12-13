@@ -10,6 +10,7 @@ import regeneratorRuntime from "regenerator-runtime";
 import path from 'path';
 import express from 'express';
 import fetch from 'node-fetch';
+import { ClientCredentialsAuthProvider } from 'twitch-auth';
 require('dotenv').config();
 
 const LOCAL_PORT = 8081;
@@ -20,6 +21,7 @@ const PORT = process.env.HTTP_PORT || LOCAL_PORT;
 const TwitchStrategy = passportTwitch.Strategy;
 const CLIENT_ID = "19fbkc20uggbz1a7bcka2azyr2clsu";
 const CLIENT_SECRET = "4m1ss0l88dgxw2oxh1mr0bi91hb3o6";
+const authProvider = new ClientCredentialsAuthProvider(CLIENT_ID, CLIENT_SECRET);
 
 const app = express();
 var token = ""
@@ -175,15 +177,30 @@ app.get('/auth/test', (req, res) => {
     res.json({isAuthenticated: isAuth, user: req.user});
 });
 
-app.get('/auth/anonymous', (req, res) => {
+app.get('/auth/anonymous', async(req, res) => {
   console.log('Creating anonymous access token');
-  console.log(req);
-  const response = fetch(`https://id.twitch.tv/oauth2/authorize?&client_secret=${CLIENT_SECRET}&grant_type=client_credentials`, {
-    method: 'POST'
-  }).then(response => response.json())
-    .then(obj => console.log(obj))
-    .then(obj => res.json({ accessToken: obj.access_token }))
-    .catch(error => console.log('Error creating anonymous credentials: ', error));
+  const result = await authProvider.getAccessToken();
+  console.log("Access Token: ", result);
+  res.json({ accessToken: result.accessToken });
+});
+
+app.get('/search/channels', async (req, res) => {
+  const reqAccessToken = req.query.accessToken;
+  const reqSearchValue = req.query.searchValue;
+  const requestUrl = `https://api.twitch.tv/helix/search/channels?query=${reqSearchValue}`;
+  console.log('Request URL: ', requestUrl);
+  console.log('Request Access Token: ', reqAccessToken);
+  console.log('Request Search Value: ', reqSearchValue);
+  const reqResponse = await fetch(requestUrl, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${reqAccessToken}`,
+      'Client-Id': CLIENT_ID
+    }
+  })
+    .then(reqResponse => reqResponse.json())
+    .then(reqResponse => console.log(reqResponse));
+  res.json(reqResponse);
 });
 
 module.exports = app;
