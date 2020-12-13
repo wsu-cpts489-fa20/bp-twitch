@@ -61,7 +61,7 @@ class TwitchChatClient extends React.Component {
             .then(response => response.json())
             .then(obj => {
                 this.setState({
-                    isAnon: true,
+                    isAnonymous: true,
                     accessToken: obj.accessToken
                 });
             });
