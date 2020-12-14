@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { Icon } from "@iconify/react";
 import twitchIcon from "@iconify-icons/mdi/twitch";
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -15,9 +16,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     width: "75%",
     height: "40px",
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
     "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.5)",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
   },
   twitchButton: {
@@ -44,7 +45,7 @@ function LoginPage(props) {
         startIcon={<Icon icon={twitchIcon} />}
         id="twitchLoginBtn"
       >
-        Login with Twitch
+        <Typography>Login With Twitch</Typography>
       </Button>
       <Button
         variant="contained"
@@ -52,7 +53,7 @@ function LoginPage(props) {
         className={classes.button}
         onClick={props.setAnonMode}
       >
-        Continue as Anonymous User
+        <Typography>Continue as Anonymous User</Typography>
       </Button>
     </div>
   );

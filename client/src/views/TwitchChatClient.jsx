@@ -5,7 +5,10 @@ import ChatStream from "../components/ChatStream";
 import StreamSelect from "../components/StreamSelect";
 import ElectronBar from "../components/ElectronBar";
 import LoginPage from "../components/LoginPage";
-import ChatTextBox from "../components/ChatTextBox"
+import ChatTextBox from "../components/ChatTextBox";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import StreamDetail from "../components/StreamDetail"
 const { remote } = window.require('electron');
 
 const tcUsr = remote.getGlobal('commandLineArgs').username;
@@ -15,13 +18,12 @@ const styles = {
   appcontainer: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#121212",
     display: "grid",
     "grid-template-rows": "24px .1fr 1fr",
   },
 };
 
-class TwitchChatClient extends React.Component {
+class TwitchChatClient extends React.PureComponent {
     constructor() {
         super();
         this.state = {
@@ -30,7 +32,9 @@ class TwitchChatClient extends React.Component {
             channel: null,
             isAuthenticated: false,
             isAnonymous: false,
-            accessToken: ""
+            accessToken: "",
+            theme: "light",
+            showStreamDetails: false,
         };
     }
 
@@ -67,6 +71,15 @@ class TwitchChatClient extends React.Component {
             });
     }
 
+    toggleTheme = () => {
+        const { theme } = this.state;
+        if (theme === "light")
+            this.setState({theme: "dark"})
+        else 
+            this.setState({theme: "light"})
+    }
+
+    // create new twitch client based on input string which holds channel name
     changeChannel = (newChannel) => {
         this.setState({ channel: newChannel })
         const { client } = this.state;
@@ -97,14 +110,23 @@ class TwitchChatClient extends React.Component {
         this.setState({ client: newClient });
     };
 
+    hideStreamDetails = () => {
+        this.setState({showStreamDetails: false})
+    }
+
+    showStreamDetails = () => {
+        this.setState({showStreamDetails: true})
+    }
+
     getAppBody = () => {
         const { client, channel, userObj, isAuthenticated, isAnonymous } = this.state;
         if (!isAuthenticated && !isAnonymous) {
-            return <LoginPage setTestMode={this.setTestMode} setAnonMode={this.setAnonMode} />
+            return <LoginPage setAnonMode={this.setAnonMode} />
         } else {
             return (
                 <>
-                    <StreamSelect changeChannel={this.changeChannel} accessToken={this.state.accessToken} />
+                    <StreamSelect showDetails={this.showStreamDetails} changeChannel={this.changeChannel} accessToken={this.state.accessToken} />
+                    { this.state.showStreamDetails && <StreamDetail channel={channel} userObj={ userObj } hideDetails={this.hideStreamDetails} /> }
                     <ChatStream client={client} />
                     <ChatTextBox channel={channel} isAnon={isAnonymous} client={client} userObj={userObj} />
                 </>
@@ -114,11 +136,20 @@ class TwitchChatClient extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const { userObj, theme } = this.state;
+        const muitheme = createMuiTheme({
+            palette: {
+              type: theme,
+            },
+          });
         return (
-            <div className={classes.appcontainer}>
-                <ElectronBar />
-                {this.getAppBody()}
-            </div>
+            <ThemeProvider theme={muitheme}>
+                <CssBaseline />
+                <div className={classes.appcontainer} data-testid="app-container">
+                    <ElectronBar user={userObj} toggleTheme={this.toggleTheme} theme={theme} />
+                    {this.getAppBody()}
+                </div>
+            </ThemeProvider>
         );
     }
 }

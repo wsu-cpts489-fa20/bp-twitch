@@ -15,6 +15,7 @@ const styles = {
   },
   innerInput: {
     color: "white",
+    backgroundColor: "rgba(0,0,0,0.5)",
     '&::placeholder': {
       fontStyle: 'italic',
     }
@@ -67,9 +68,16 @@ class StreamSelect extends React.Component {
     return <Typography {...params} noWrap>{option.display_name}</Typography>;
   }
 
+  reactToUserChange = () => {
+      const { changeChannel } = this.props;
+      const { channel } = this.state;
+      changeChannel(channel);
+  }
+
   render() {
     const { classes } = this.props;
     return (
+      <>
       <Autocomplete
         freeSolo
         className={classes.mainInput}
@@ -94,6 +102,29 @@ class StreamSelect extends React.Component {
         }}
         renderOption={this.renderOption}
       />
+      <span style={{
+        position: "absolute",
+        right: "10px",
+        top: "43px",
+        fontSize: "0.75em",
+        color: "gray",
+      }}>
+        <a 
+            onClick={ this.reactToUserChange }
+            style={{
+                cursor: "pointer"
+            }}
+        ><i><u>Connect to a server</u></i></a>
+        &nbsp;|&nbsp; 
+        <a 
+            id="statsLink"
+            onClick={ this.props.showDetails }
+            style={{
+                cursor: "pointer"
+            }}
+        ><i><u>Server stats</u></i></a>
+      </span>
+      </>
     );
   }
 }

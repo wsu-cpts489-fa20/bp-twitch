@@ -4,16 +4,15 @@ import { withStyles } from '@material-ui/styles';
 
 const styles = {
     mainInput: {
-        backgroundColor: "black",
+      backgroundColor: "rgba(0,0,0,0.5)",
     },
     innerInput: {
-        color: "white",
-        margin: "0 10px 0 10px",
-        '&::placeholder': {
-            fontStyle: 'italic',
-        },
+      margin: "0 10px 0 10px",
+      '&::placeholder': {
+        fontStyle: 'italic',
+      },
     }
-}
+  }
 
 class ChatTextBox extends React.Component {
     constructor(props) {
@@ -21,6 +20,13 @@ class ChatTextBox extends React.Component {
         this.state = {
             chatBoxText: ""
         }
+    }
+
+    handleChatSend = () => {
+        const { client, channel } = this.props;
+        const { chatBoxText } = this.state;
+        client.say(channel, chatBoxText);
+        this.setState({chatBoxText: ""})
     }
 
     setText = (newText) => {
@@ -32,12 +38,8 @@ class ChatTextBox extends React.Component {
     }
 
     keyPress = (e) => {
-        const { client, channel } = this.props;
-        const { chatBoxText } = this.state;
-        // if the enter key is pressed change the channel
         if (e.keyCode === 13) {
-            client.say(channel, chatBoxText);
-            this.setState({chatBoxText: ""})
+            this.handleChatSend()
         }
     }
 
