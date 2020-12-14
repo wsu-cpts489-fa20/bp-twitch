@@ -7,13 +7,29 @@ import { withStyles } from '@material-ui/styles';
 
 const styles = {
   mainInput: {
-    backgroundColor: "black"
+    backgroundColor: "black",
+    overflow: "auto",
+    "&::-webkit-scrollbar": {
+      display: "none"
+    }
   },
   innerInput: {
-    color: "white", 
-    margin: "0 10px 0 10px",
+    color: "white",
     '&::placeholder': {
       fontStyle: 'italic',
+    }
+  },
+  option: {
+    '&[data-focus="true"]': {
+      backgroundColor: '#6e6e6e',
+      borderColor: 'transparent',
+    },
+    color:"white",
+    backgroundColor: "black"
+  },
+  listbox: {
+    "&::-webkit-scrollbar": {
+      display: "none"
     }
   }
 }
@@ -47,6 +63,7 @@ class StreamSelect extends React.Component {
   }
 
   renderOption = (option, params) => {
+    const { classes } = this.props;
     return <Typography {...params} noWrap>{option.display_name}</Typography>;
   }
 
@@ -64,9 +81,12 @@ class StreamSelect extends React.Component {
         }}
         id="streamSelect"
         color="secondary"
-        fullWidth
         blurOnSelect
-        classes={{inputRoot: classes.innerInput}}
+        classes={{
+          inputRoot: classes.innerInput,
+          option: classes.option,
+          listbox: classes.listbox
+        }}
         options={this.state.suggestions}
         getOptionLabel={(option) => option.display_name}
         renderInput={(params) => {
