@@ -177,6 +177,9 @@ app.get('/auth/test', (req, res) => {
     res.json({isAuthenticated: isAuth, user: req.user});
 });
 
+// ANONYMOUS route: Retrieves an access token for when user is in
+// anonymous mode. This is technically an app token and should
+// follor the guidelines for use as such.
 app.get('/auth/anonymous', async(req, res) => {
   console.log('Creating anonymous access token');
   const result = await authProvider.getAccessToken();
@@ -184,14 +187,18 @@ app.get('/auth/anonymous', async(req, res) => {
   res.json({ accessToken: result.accessToken });
 });
 
-app.get('/search/channels', async (req, res) => {
+// SEARCH route: Queries the Twitch API endpoint for searching 
+// channels. Requires an access token and search value as query
+// params.
+app.get('/search/channels', (req, res) => {
   const reqAccessToken = req.query.accessToken;
   const reqSearchValue = req.query.searchValue;
-  const requestUrl = `https://api.twitch.tv/helix/search/channels?query=${reqSearchValue}`;
+  const reqLiveOnly    = req.query.liveOnly;
+  const requestUrl = `https://api.twitch.tv/helix/search/channels?query=${reqSearchValue}&live_only=${reqLiveOnly}`;
   console.log('Request URL: ', requestUrl);
   console.log('Request Access Token: ', reqAccessToken);
   console.log('Request Search Value: ', reqSearchValue);
-  const reqResponse = await fetch(requestUrl, {
+  fetch(requestUrl, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${reqAccessToken}`,
@@ -199,8 +206,7 @@ app.get('/search/channels', async (req, res) => {
     }
   })
     .then(reqResponse => reqResponse.json())
-    .then(reqResponse => console.log(reqResponse));
-  res.json(reqResponse);
+    .then(reqResponse => res.json({ data: reqResponse.data }));
 });
 
 module.exports = app;

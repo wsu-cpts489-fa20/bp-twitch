@@ -18,8 +18,6 @@ var _twitchAuth = require("twitch-auth");
 
 var _mongoose = _interopRequireDefault(require("mongoose"));
 
-var _bodyParser = require("body-parser");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -246,7 +244,10 @@ app.get('/auth/test', function (req, res) {
     isAuthenticated: isAuth,
     user: req.user
   });
-});
+}); // ANONYMOUS route: Retrieves an access token for when user is in
+// anonymous mode. This is technically an app token and should
+// follor the guidelines for use as such.
+
 app.get('/auth/anonymous', /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee2(req, res) {
     var result;
@@ -276,47 +277,30 @@ app.get('/auth/anonymous', /*#__PURE__*/function () {
   return function (_x5, _x6) {
     return _ref2.apply(this, arguments);
   };
-}());
-app.get('/search/channels', /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime["default"].mark(function _callee3(req, res) {
-    var reqAccessToken, reqSearchValue, requestUrl, reqResponse;
-    return _regeneratorRuntime["default"].wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            reqAccessToken = req.query.accessToken;
-            reqSearchValue = req.query.searchValue;
-            requestUrl = "https://api.twitch.tv/helix/search/channels?query=".concat(reqSearchValue);
-            console.log('Request URL: ', requestUrl);
-            console.log('Request Access Token: ', reqAccessToken);
-            console.log('Request Search Value: ', reqSearchValue);
-            _context3.next = 8;
-            return (0, _nodeFetch["default"])(requestUrl, {
-              method: 'GET',
-              headers: {
-                'Authorization': "Bearer ".concat(reqAccessToken),
-                'Client-Id': CLIENT_ID
-              }
-            }).then(function (reqResponse) {
-              return reqResponse.json();
-            }).then(function (reqResponse) {
-              return console.log(reqResponse);
-            });
+}()); // SEARCH route: Queries the Twitch API endpoint for searching 
+// channels. Requires an access token and search value as query
+// params.
 
-          case 8:
-            reqResponse = _context3.sent;
-            res.json(reqResponse);
-
-          case 10:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3);
-  }));
-
-  return function (_x7, _x8) {
-    return _ref3.apply(this, arguments);
-  };
-}());
+app.get('/search/channels', function (req, res) {
+  var reqAccessToken = req.query.accessToken;
+  var reqSearchValue = req.query.searchValue;
+  var reqLiveOnly = req.query.liveOnly;
+  var requestUrl = "https://api.twitch.tv/helix/search/channels?query=".concat(reqSearchValue, "&live_only=").concat(reqLiveOnly);
+  console.log('Request URL: ', requestUrl);
+  console.log('Request Access Token: ', reqAccessToken);
+  console.log('Request Search Value: ', reqSearchValue);
+  (0, _nodeFetch["default"])(requestUrl, {
+    method: 'GET',
+    headers: {
+      'Authorization': "Bearer ".concat(reqAccessToken),
+      'Client-Id': CLIENT_ID
+    }
+  }).then(function (reqResponse) {
+    return reqResponse.json();
+  }).then(function (reqResponse) {
+    return res.json({
+      data: reqResponse.data
+    });
+  });
+});
 module.exports = app;
