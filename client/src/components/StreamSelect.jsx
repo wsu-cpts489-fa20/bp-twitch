@@ -7,26 +7,20 @@ import { withStyles } from '@material-ui/styles';
 
 const styles = {
   mainInput: {
-    backgroundColor: "black",
     overflow: "auto",
     "&::-webkit-scrollbar": {
       display: "none"
     }
   },
   innerInput: {
-    color: "white",
-    backgroundColor: "rgba(0,0,0,0.5)",
     '&::placeholder': {
       fontStyle: 'italic',
     }
   },
   option: {
     '&[data-focus="true"]': {
-      backgroundColor: '#6e6e6e',
-      borderColor: 'transparent',
-    },
-    color:"white",
-    backgroundColor: "black"
+      borderColor: 'transparent'
+    }
   },
   listbox: {
     "&::-webkit-scrollbar": {
