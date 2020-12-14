@@ -1,33 +1,37 @@
 import React from "react";
 import Input from "@material-ui/core/Input";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from '@material-ui/styles';
 
 const styles = {
   mainInput: {
-    backgroundColor: "black",
+    backgroundColor: "black"
   },
   innerInput: {
     color: "white", 
     margin: "0 10px 0 10px",
     '&::placeholder': {
       fontStyle: 'italic',
-    },
+    }
   }
 }
 
 class StreamSelect extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       channel: "",
       suggestions: []
     };
   }
 
-  handleChange = (e) => {
-    this.setState({ channel: e.target.value });
+  handleChange = (newInputValue) => {
+    console.log("Input received.");
+    this.setState({ channel: newInputValue });
 
-    const requestUrl = `/search/channels?accessToken=${encodeURIComponent(this.props.accessToken)}&searchValue=${e.target.value}`;
+    const requestUrl = `/search/channels?accessToken=${encodeURIComponent(this.props.accessToken)}&searchValue=${encodeURIComponent(newInputValue)}&liveOnly=${true}`;
     fetch(requestUrl, {
       method: 'GET',
       headers: {
@@ -35,37 +39,40 @@ class StreamSelect extends React.Component {
         'Content-Type': 'application/json'
       }
     })
-      .then(response => console.log(response))
+      .then(response => response.json())
       .then(response => {
-        this.setState({ suggestions: response.data });
+        const newSuggestions = ((Object.keys(response).length === 0 && response.constructor === Object) || response.data === undefined) ? [] : response.data;
+        this.setState({ suggestions: newSuggestions });
       });
   }
 
-  keyPress = (e) => {
-    // if the enter key is pressed change the channel
-    if (e.keyCode === 13) {
-      const { changeChannel } = this.props;
-      const { channel } = this.state;
-      changeChannel(channel);
-    }
+  renderOption = (option, params) => {
+    return <Typography {...params} noWrap>{option.display_name}</Typography>;
   }
 
   render() {
     const { classes } = this.props;
     return (
-      <Input
+      <Autocomplete
+        freeSolo
         className={classes.mainInput}
-        defaultValue={this.state.channel}
-        onChange={this.handleChange}
-        onKeyDown={this.keyPress}
-        placeholder="enter a channel name..."
+        onInputChange={(event, newInputValue) => {
+          this.handleChange(newInputValue)
+        }}
+        onChange={(event, newValue) => {
+          this.props.changeChannel(newValue.display_name)
+        }}
         id="streamSelect"
         color="secondary"
-        inputProps={{ 
-          className: classes.innerInput,
-        }}
-        spellCheck={false}
         fullWidth
+        blurOnSelect
+        classes={{inputRoot: classes.innerInput}}
+        options={this.state.suggestions}
+        getOptionLabel={(option) => option.display_name}
+        renderInput={(params) => {
+          return <TextField {...params} className={classes.innerInput} placeholder="Enter a channel name..." />
+        }}
+        renderOption={this.renderOption}
       />
     );
   }
